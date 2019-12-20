@@ -1,0 +1,13 @@
+Created by Jacob Kennedy.
+
+This program calculates the an integer's neighbors regarding the Collatz Conjecture (https://en.wikipedia.org/wiki/Collatz_conjecture).
+That is, the program calculates what is the number of the next step, as per the conjecture, as well as what previous numbers could result in the current number. For example, if the current number is 10, the next number would be 5 and the previous numbers could be 3 and 20 (since 3 and 20 become 10 in the next Collatz step).
+This program is incomplete, as it was intended to visually display the tree of numbers created by the process.
+
+How to run:
+A jar file has been provided that will run the program. However, to see the results, enter the following command into a linux terminal:
+
+	<path to your jre file>/bin/java.exe -Xmx1g -jar Collatz.jar
+
+Make sure to fill in path to your jre directory.
+Once the program is running, press the start button to start the calcualtions. Calculations are preformmed in intervals of 1000 numbers.
