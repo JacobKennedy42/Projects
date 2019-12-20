@@ -1,0 +1,25 @@
+Created by Jacob Kennedy. Code not produced by Jacob Kennedy is credited in the corresponding class header.
+Images provided by the MINST database of handwritten digits: http://yann.lecun.com/exdb/mnist/
+
+This program is a supervised convolutional neural net. The net takes in images of handwritten numbers and guesses what number the image represents. This neural net is called the "reader".
+The program also includes a "writer" net that takes in a requested number and tries to draw that number. It's performance is judged by a pre-trained reader net.
+The reader net is able to guess images correctly with 94% accuracy, 84% if randomly generated images are included. The writer so far has not been able to perform better than random chance.
+
+How to run:
+A jar file has been provided that will run the reader training program with no random images.
+Addidtionally, the program may be run in linux terminal using the following command:
+
+	<path to your jre file>/bin/java.exe -Xmx1g -jar AIHandwritingProject.jar
+	
+Make sure to fill in path to your jre directory.
+This will display the results of each test.
+
+To change the configuration of the program, adjust the values of the final variables at the top of the file AIHandwritingProject.java in the src directory, then recompile. Specifically:
+
+	HAS_RANDOM: true if randomly generated images are to be added, false if otherwise.
+	IS_WRITER_TEST: true is a writer net is to be trained, false if a reader net is to be trained.
+	DISPLAY_ON: true if the tested images are to be displayed, false if not
+
+The neural net values are saved in the saves folder. Two example folders are provided: ExampleReaderSave and ExampleReaderSaveNoRandom.
+To use these files when testing, change there names to readerSave and readerSaveNoRandom, respectively.
+To reset the training of a reader or writer, delete the save corresponding to the training's configurations (for example, to reset a reader's training with no random images, delete readerSaveNoRandom in the saves directory).
