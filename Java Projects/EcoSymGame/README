@@ -1,0 +1,6 @@
+Created by Jacob Kennedy.
+
+This program was an attempt to make an ecosystem simulator. This project was passed after creating an imperfect colision system.
+
+How to Run:
+	An executable jar file has been provided. The program in the jar is a demo of the collision system, showcasing a bug in which objects may pass through the borders when they are small and fast.
