@@ -3,4 +3,5 @@ Created by Jacob Kennedy
 This program runs the game of Minesweeper. By default the board is 20x20 with 100 mines. The game is won when all non-mine tiles are revealed.
 Reveal a tile by clicking on it with the left mouse button. Flag a suspected mine with the right mouse button.
 
-To run this program: Within this directory, execute the jar file. Program may not function properly if jar file is executed outside of this directory.
+How to run:
+	Within this directory, execute the jar file. Program may not function properly if jar file is executed outside of this directory.

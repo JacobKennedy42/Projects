@@ -1,0 +1,7 @@
+Created by Jacob Kennedy.
+
+This program simulates a game of war between two players (https://en.wikipedia.org/wiki/War_(card_game)).
+Press the next turn button to take a turn. The number of cards in each player's deck and discard pile are displayed near the bottom, as well as the cards that are at stake in the case of war (labeled 'Loot').
+
+How to Run:
+	A executable jar file has been provided.
