@@ -1,0 +1,16 @@
+Created by Jacob Kennedy.
+
+This program is a simple tile-based cave exploring game with simple RPG elements.
+
+How to Run:
+	A executable jar file has been provided.
+
+Tutorial:
+	Use the arrow keys or WASD to move the player. Holding SHIFT while using the arrow keys or WASD will rotate the player without moving it.
+	SPACE will break the block in front of the player.
+	E will use the item currently selected in the player's inventory. Using a block will place it in front of the player.
+	NUMBER keys will select the cooresponding slot in the player's inventory. Holding shift and pressing a NUMBER key while facing a chest will instead select a slot in the chest's inventory.
+	F will swap the item in the player's selected inventory slot with the item in the chest's selected inveontory slot.
+	- and + will zoom the screen in and out (there are currently some bugs with this).
+	ESC closes the game.
+	Each game has at least one chest. In the chest is a sword and a bow. The game also has zombies that will try to attack the player and turn them into a zombie. The player may use the sword or bow to kill the zombies.
