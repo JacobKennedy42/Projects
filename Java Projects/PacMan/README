@@ -1,6 +1,7 @@
 Created by Jacob Kennedy.
 
 This program is a demonstration of the game PacMan (https://en.wikipedia.org/wiki/Pac-Man), where the player is played by the computer.
+In this version, the green dots show the location that the blue and pink ghost are navigating to.
 This was an early project, and as such this version is very buggy.
 
 How to Run:

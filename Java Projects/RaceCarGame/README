@@ -1,0 +1,11 @@
+Created by Jacob Kennedy.
+
+This program simulates a car driving down a road full of road spikes. The goal of the car is to drive a certain distance without hitting a spike. If it does, it is marked a WIN. If it hits a spike, it is marked a HIT.
+When the car completes a run, it modifies a file called RaceCarGameData.txt, so that it may avoid spikes better in the future.
+
+How to Run:
+	In a linux terminal, cd into this directory and enter the following command:
+
+		java RaceCarGame
+
+	Type /reset to reset the car's memory. Otherwise, type in the number of runs you would like to do.
