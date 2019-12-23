@@ -1,0 +1,4 @@
+C:\Users\Jacob\Desktop\Solitaire\src\Board.java
+C:\Users\Jacob\Desktop\Solitaire\src\Card.java
+C:\Users\Jacob\Desktop\Solitaire\src\Deck.java
+C:\Users\Jacob\Desktop\Solitaire\src\Solitaire.java

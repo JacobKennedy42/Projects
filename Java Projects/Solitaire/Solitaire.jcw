@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>Solitaire</label>
+		<id>83</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>Solitaire.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>Solitaire.jcp</path>
+		</project>
+	</projects>
+</workspace>

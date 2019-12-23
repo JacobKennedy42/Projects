@@ -1,0 +1,10 @@
+Created by Jacob Kennedy.
+
+This program is a text-based version of the card game Solitaire (https://en.wikipedia.org/wiki/Klondike_(solitaire)).
+The instructions for playing are provided in the program.
+
+How to Run:
+	In a linux terminal, cd into this directory and enter the following commands:
+
+		cd classes
+		java Solitaire
