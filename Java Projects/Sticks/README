@@ -1,0 +1,10 @@
+Created by Jacob Kennedy.
+
+This program is a demonstration of the game Chopsticks (https://en.wikipedia.org/wiki/Chopsticks_(hand_game)).
+Instructions on how to run the program are provided on startup.
+
+How to Run:
+    In a linux terminal, cd into this directory and enter the following commands:
+    
+            cd src
+            java Solitaire

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace_user>
+	<active_project>
+		<label>Sticks</label>
+	</active_project>
+	<projects>
+		<project>
+			<label>Sticks</label>
+			<showfiles>false</showfiles>
+			<folderitem>
+				<path>classes</path>
+			</folderitem>
+			<folderitem>
+				<path>src</path>
+			</folderitem>
+		</project>
+	</projects>
+	<open_files>
+		<docitem>
+			<path>src\Sticks.java</path>
+			<source>true</source>
+			<index>0</index>
+			<active>true</active>
+		</docitem>
+		<docitem>
+			<path>src\Player.java</path>
+			<source>true</source>
+			<index>1</index>
+			<active>false</active>
+		</docitem>
+	</open_files>
+	<symboltables>
+		<symboltable>
+			<path>src\Test.java.sdk</path>
+			<symbols>
+				<symbol>Test</symbol>
+			</symbols>
+		</symboltable>
+		<symboltable>
+			<path>src\Player.java.sdk</path>
+			<symbols/>
+		</symboltable>
+		<symboltable>
+			<path>src\Sticks.java.sdk</path>
+			<symbols>
+				<symbol>Player</symbol>
+				<symbol>Sticks</symbol>
+			</symbols>
+		</symboltable>
+	</symboltables>
+</workspace_user>

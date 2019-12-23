@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>Sticks</label>
+		<id>3</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>Sticks.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>Sticks.jcp</path>
+		</project>
+	</projects>
+</workspace>
