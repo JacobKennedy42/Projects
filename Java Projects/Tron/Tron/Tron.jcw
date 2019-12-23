@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>Tron</label>
+		<id>77</id>
+		<version>0</version>
+	</settings>
+	<users>
+		<user>
+			<path>Tron.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>Tron.jcp</path>
+		</project>
+	</projects>
+</workspace>

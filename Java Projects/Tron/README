@@ -1,0 +1,7 @@
+Created by Jacob Kennedy.
+
+This program is a demonstration of the game Light Cycles from the arcade game Tron (https://en.wikipedia.org/wiki/Tron_(video_game)).
+Here, there are two computer-operated players. The goal is to remove all legal moves from the other player.
+
+How to Run:
+	An executable jar file has been provided.
