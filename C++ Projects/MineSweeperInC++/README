@@ -1,0 +1,14 @@
+Created by Jacob Kennedy. Uses the Eigen library in order to optimize matrix operations.
+
+This program uses a deep Q reinforcement learning neural network to play the game of Minesweeper (https://en.wikipedia.org/wiki/Minesweeper_(video_game)).
+When the program is started, the board dimensions (the one given is 4x4), the number of hidden layers in the net, and the number of nodes in each layer are printed out. Then the net plays many games. After a certain number of games, the program prints out the average number of points the net gained over the course of the games (1 point for each tile cleared, -1 point for clicking on an already revealed tile, and the negative total number of tiles for clicking a mine. For example, clicking a mine on a 3x3 board yeilds -9 points). As the net learns, the average number of points gained per game should go up.
+NOTE: Nets are initialized with random variables. As such, initial performance may vary, and multiple start-ups may be needed to get quicker results. Results usually appear before at least a minute or two.
+NOTE: Although over a long period of time the net shows improvement, initially the net demonstrates a sharp decline in performance. The reason for this is unknown and needs further debugging.
+
+How to Run:
+	In linux terminal, type in the following command:
+
+		./NeuralNet		
+
+How to recompile:
+	g++ -std=c++11 -I eigen-eigen-323c052e1731 MineSweeper.cc NeuralNet.cc -o NeuralNet

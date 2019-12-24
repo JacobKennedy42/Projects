@@ -9,7 +9,7 @@ For more information on these types of neural nets: https://ruder.io/optimizing-
 
 The game:
 	There is a board of variable width and length. The player is randomly placed onto the board, as is a goal. The neural net must move the player to the goal in as few moves as possible.
-	When the program is started, the net plays many games. After a certain number of games, the program prints out the average number of turns the net took to move the player to the goal. As the net learns, the average number of turns should go down.
+	When the program is started, the board dimensions (the one given is 4x4), the number of hidden layers in the net, and the number of nodes in each layer are printed out. Then the net plays many games. After a certain number of games, the program prints out the average number of turns the net took to move the player to the goal. As the net learns, the average number of turns should go down.
 	NOTE: Nets are initialized with random variables. As such, initial performance may vary, and multiple start-ups may be needed to get quicker results. Results usually appear before at least a minute or two. 
 
 How to Run:
