@@ -1,0 +1,31 @@
+Created by Jacob Kennedy. Uses the Eigen library in order to optimize matrix operations.
+
+This program is a prototype for a deep Q reinforcement learning neural network.
+3 types of neural nets are provided:
+	One that uses standard gradient descent (called SGDNet).
+	One that uses standard gradient descent with momentum (called MOMNet).
+	One that uses RMSProp as an optimization (called RMSNet).
+For more information on these types of neural nets: https://ruder.io/optimizing-gradient-descent/
+
+The game:
+	There is a board of variable width and length. The player is randomly placed onto the board, as is a goal. The neural net must move the player to the goal in as few moves as possible.
+	When the program is started, the net plays many games. After a certain number of games, the program prints out the average number of turns the net took to move the player to the goal. As the net learns, the average number of turns should go down.
+	NOTE: Nets are initialized with random variables. As such, initial performance may vary, and multiple start-ups may be needed to get quicker results. Results usually appear before at least a minute or two. 
+
+How to Run:
+	In linux terminal, type in the following commands for the correpsonding net:
+
+	Sandard Gradient Descent:
+		./SGDNet
+
+	Momentum:
+		./MOMNet
+
+	RSMProp:
+		./RMSProp
+		
+
+How to recompile any of these nets:
+	g++ -std=c++11 -I eigen-eigen-323c052e1731 Game.cc SGDNet.cc -o SGDNet
+	g++ -std=c++11 -I eigen-eigen-323c052e1731 Game.cc MOMNet.cc -o MOMNet
+	g++ -std=c++11 -I eigen-eigen-323c052e1731 Game.cc RMSNet.cc -o RMSNet

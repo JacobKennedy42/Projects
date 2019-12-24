@@ -4,6 +4,7 @@ Images provided by the MINST database of handwritten digits: http://yann.lecun.c
 This program is a supervised convolutional neural net. The net takes in images of handwritten numbers and guesses what number the image represents. This neural net is called the "reader".
 The program also includes a "writer" net that takes in a requested number and tries to draw that number. It's performance is judged by a pre-trained reader net.
 The reader net is able to guess images correctly with 94% accuracy, 84% if randomly generated images are included. The writer so far has not been able to perform better than random chance.
+NOTE: Without a save file, the program initializes the net wit random variables. As a result, initial success may vary, and multiple start-ups may be needed to get promising results quickly.
 
 How to run:
 A jar file has been provided that will run the reader training program with no random images.
