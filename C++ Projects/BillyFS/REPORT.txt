@@ -1,0 +1,50 @@
+- Team members:
+
+	Michelle Cheng, Billy Vo, Roman Kuhn
+
+- What percentage of the work did everyone do?
+
+	Me - 27%
+	Roman - 33%
+	Michelle - 22%
+	Billy - 18%
+
+- What did you propose?
+
+	We proposed implementing an improved file system with journaling,
+	symbolic links, dynamicly sized file allocation, and other common file
+	system features.
+
+- What did you implement?
+
+	We implemented a file system with a circular journal log.
+
+- What did you learn?
+
+	An important part about team projects is making sure that you establish
+	the api (what exactly methods do, the format of the parameters they
+	take in) and the general structure of the project beforehand. That way
+	you reduce the amount of confusion and rexplanation while doing the
+	project.
+	It is also pretty important to unit test. Our project had methods that
+	were pretty interconnected, but we still could have tested more of our
+	methods immediately after making them, to avoid them causing bugs that
+	seem to come out of nowhere. This will almost always happen, but the
+	ammount of mystery bugs can still be lessened with better unit testing.
+	Also, sometimes it is ok to implement parts of the code with less
+	people. Having multiple people on one segment of code is good for
+	double checking, but making sure everyone holds the same train of
+	thought can be hard, and often times the returns on having many eyes
+	on the code is diminishing.
+
+- Tell me how to run your code and verify that it actually works
+
+	cd into ourProject, then use the command >make -s clean test
+	This will run t0 (which has no test, it's just there for the purposes
+	of the Makefile) and test, which creates a billyfs, writes and links to
+	files, checks if those writes and links are correct, then simulates a
+	crash and sees if our journal corretly recovers our filesystem.
+
+- Add any other comments 
+
+	Journaling is hard.

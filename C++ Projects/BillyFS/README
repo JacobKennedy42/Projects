@@ -1,0 +1,14 @@
+Created by Michelle Cheng, Jacob Kennedy, Roman Kuhn, and Billy Vo. Expands on a file system provided by Dr. Amhed Gheith for a previous assignment.
+
+This was a group project done as a final for an Operating Systems course. It is a simple file system which utilizes a journal, where changes are written to before writing to the actual file in order avoid corruption (https://en.wikipedia.org/wiki/Journaling_file_system).
+NOTE: This project was written on a time crucnch. Thus, our tests are quite minimal.
+
+How to run:
+	NOTE: Program results may vary from machine to machine. For example, in order to run, the program qemu-system-i386 must be installed in your linux terminal.
+
+	In a linux terminal, cd into directory 'ourProject', the enter the following command:
+
+	make -s clean test
+
+This will run the test from the file test.cc (t0 is only included for compilation purposes).
+

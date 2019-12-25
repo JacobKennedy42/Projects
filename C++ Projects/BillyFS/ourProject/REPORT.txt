@@ -1,0 +1,11 @@
+- How many disk reads/writers are issued in order to run both t0 and t1 on your
+implementation?
+t0: 595 reads, 0 writes
+t1: 2622 reads, 286 writes
+
+- Discuss techniques for reducing the number of disk accesses:
+
+    * at the block level
+    	Working with larger chunks of data exploits the concept of locality, which is where data near each other are likely to be accessed near each other. Thus, if you load a large chunk of data at one time, you may read less from the disk because it prevents reading one little bit of data by one little bit if the data were near each other on disk.
+    * at the file system level
+    	Keep in memory data structures that reflect the state of the disk and only update disk when changes have occurred. Otherwise, just read from memory. This is efficient because you don't have to keep accessing the disk.

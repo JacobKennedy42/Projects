@@ -1,0 +1,13 @@
+1c1,10
+< grep: test.raw: No such file or directory
+---
+> *** Let's test the journaling file system!
+> *** Making new nodes!
+> *** Let's make sure the new node was created correctly
+> *** 0 file:New node(1,0)
+> *** writing and reading from new node
+> *** newData2: 80085
+> *** doing some link tests
+> *** newData3: 80085
+> *** Info after we repair
+> *** newData4: 80085
