@@ -4,7 +4,7 @@ All projects included were created either in my free time (independent of academ
 Instructions on how to run each project are located in each project's README
 
 Java Projects of Note:
-	Project Anomaly
+	Project Anomaly,
 	AI Handwriting Project
 	
 C++ Projects of Note:
