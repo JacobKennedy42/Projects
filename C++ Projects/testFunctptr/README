@@ -1,0 +1,7 @@
+This is a test of function pointers and vectors of function pointers.
+
+To compile on linux terminal:
+g++ testFunctptr.c++ -o testFunctptr
+
+To run onn linux terminal:
+./testFunctptr
