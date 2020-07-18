@@ -1,0 +1,34 @@
+This program uses a supervised neural net to form answers to questions pulled
+from billwurtz.com/questions/questions.html. The goal of the net is to answer
+questions in a style similar to musician Bill Wurtz. The program starts with
+the shortest questions first.
+The net uses the RMSprop algorithm to adjust its values. The net also steadily
+increases its learning rate during times of stagnation, and then resets it if
+values appear to stop converging. New samples are added when the average cost
+per character is <.01, where 1 is the cost between 2 adjacent ascii characters
+(Ex: F and G).
+
+This program is meant to be run in terminal and uses curl to get the questions
+and answers. You may download the curl devloper package using the following:
+
+	sudo apt-get install libcurl4-openssl-dev
+
+To run the net with a given sample net and sample questions, enter:
+
+	make clean runNet
+
+Then enter the number of questions you want the net to learn before printing
+the results. The sample net has already learned the answers to more than 30
+questions.
+
+To erase the existing neural net and run a new blank net, enter:
+
+	make rmSaves runNet
+
+To update the data with the most recent questions, enter:
+
+	make clean getData
+
+To restore the net and questions with the given samples, enter:
+
+	make restoreSamples

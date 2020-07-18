@@ -8,4 +8,5 @@ Java Projects of Note:
 	AI Handwriting Project
 	
 C++ Projects of Note:
+	Bill Wurtz Question Answerer
 	Q Net Prototype
