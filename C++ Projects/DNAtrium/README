@@ -1,0 +1,62 @@
+This is a program based on the programming assignment Darwin's World (https://users.cs.duke.edu/~ola/darwin.html).
+In this program, there is a grid populated with creatures. Each creature has
+an energy level. If this creature takes a turn with an energy level of 0 or
+less, they die and are removed from the board. Creatures also have a set of
+instructions. Instructions can either be an action instruction that changes
+the board/creature state, or a control instruction that modifies which
+instruction the creature will perform. Creatures can perform many control
+instructions in a turn, but only 1 action instruction per turn.
+Board positions are modular, meaning that moving off on edge of the board
+places the creature on the opposite edge of the board. Many instructions also
+treat their arguments modularly. For example, if there is the instruction
+GOTO 10, meaning go to line 10 of the instruction set, but the creature only
+has 10 instructions (lines 0-9), then the instruction goes to line 10 % 10, or
+line 0.
+All instruction ranges are incusive beginning and exclusive end. For example,
+instructions from lines 2 to 5 would consist of lines 2, 3 and 4.
+
+Actions:
+	MOVE		- Lose 1 energy and move the creature forward.
+	TURN_LEFT	- Lose 1 energy and turn the creature 90 degrees counter
+				  clockwise.
+	TURN_RIGHT	- Lose 1 energy and turn the creature 90 degrees clockwise.
+	GROW		- Gain 1 energy. There is a small chance of mutating a random 
+				  instruction.
+	EAT			- If there is a creature in front of this creature, take at most
+				  100 energy from that creature. If there is no creature, lose
+				  1 energy.
+	GIVE		- Lose 1 energy. If there is a creature in front of this
+				  creature, give that creature 1 energy.
+	BIRTH X Y Z	- Lose Z energy. If the space in front of this creature is
+				  empty, create another creature with Z energy and a copy of
+				  this creature's instruction set from lines X to Y.
+	INJECT X Y Z- Lose 1 energy. If there is a creature in front of this
+				  creature, insert a copy of this creature's instruction set
+				  from lines X to Y into line Z of the that creature.
+	DELETE X Y	- Lose 1 energy. Delete lines X to Y from this creature's
+				  instruction set.
+	MUTATE		- Lose 1 energy. If there is a creature in front of this
+				  creature, mutate a random instruction from that creature
+				  (change the instruction into another random instruction with
+				  random arguments).
+
+Controls:
+	GOTO X		- Go to (and perform) line X of this creature's instruction
+				  set.
+	IF_RAND		- Randomly go to either line X or the next line.
+	IF_FRONT	- If there is a creature in front of this creature, go to line
+				  X. Otherwise, go to the next line.
+	IF_PROBE X Y Z	- If there is a creature in front of this creature, and
+					  the instruction at line X of that creature's instruction
+					  set matches given instruction Y, then go to line Z.
+					  Otherwise, go to the next line.
+
+To run the program in terminal use the following command:
+
+	make run
+
+You will be requested the dimensions of the board, how many turns will be
+simulated, and after how many turns the simulation will save the state of the
+board and creatures. The board and creature statistics will be saved to the
+folder creatureStats. A sample file called sampleTurn100000 shows a board and
+creatures on a 100x100 board after 100000 turns.
