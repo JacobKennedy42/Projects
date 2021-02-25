@@ -5,6 +5,7 @@ Instructions on how to run each project are located in each project's README
 
 Java Projects of Note:
 	Project Anomaly,
+	Tone Generator,
 	AI Handwriting Project
 	
 C++ Projects of Note:
