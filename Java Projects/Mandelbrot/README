@@ -1,0 +1,7 @@
+Created by Jacob Kennedy.
+
+This program draws the mandelbrot set and lets the user zoom into given
+points at the edge of the set.
+
+How to Run:
+    A executable jar file has been provided. Click a point to zoom into the set.
