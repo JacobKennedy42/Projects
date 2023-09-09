@@ -1,0 +1,125 @@
+#ifndef _DNATRIUM_H_
+#define _DNATRIUM_H_
+
+#include <iostream>			//cout, ostream
+#include <deque>			//deque
+#include <vector>			//vector
+#include <unordered_map>	//unordered_map
+s#include <functional>		//function
+#include <assert.h>			//assert
+#include <random>			//mt19937
+#include <chrono>			//system_clock
+
+using namespace std;
+
+//unsigned int shorthand
+typedef unsigned int uint;
+
+//TODO: move these into instruction
+enum InstLabel {WAIT, MOVE, TURN_LEFT, TURN_RIGHT, GROW, EAT, GIVE, BIRTH, INJECT, DELETE, MUTATE, GOTO, IF_RAND, IF_FRONT, IF_PROBE};
+
+//modular division that returns positive ints for all negative numbers
+static uint mod(const int& n, const int& m)
+{
+	return ((n % m) + m) % m;
+}
+
+class Board;
+
+class Creature
+{
+public:
+	class Instruction;
+
+private:
+	bool _turn;
+	int _energy;
+	int _dir;
+	uint _pc;
+	deque<Instruction> _instructions;
+	int _r;
+	int _c;
+
+	//random 32-bit number generator.
+	static mt19937 rg;
+
+	//Size limit of _instructions
+	static const int INST_LIMIT = 50;
+	//Max amount of energy a creature can get from one exectution of GROW
+	static const unsigned short MAX_GROW = 1;
+	//Amount that creature eat each other for
+	static const unsigned short MAX_EAT = 100 * MAX_GROW;
+
+	void setPC(const uint&);
+	void incrementPC();
+	void addInstructions(uint, uint, uint, const deque<Instruction>&);
+	void removeInstruction(uint);
+	void removeInstructions(uint, uint);
+	void swapInstructions(uint, uint);
+	void mutateInstruction();
+	void die(Board& board);
+	void rotate(const int&);
+	pair<int, int> getFrontCoords();
+	void moveForward(Board&);
+	Creature* getFront(Board&);
+
+public:
+	Creature(const int&, const int&, const int&);
+	Creature(const int&, const int&, const int&, const deque<Instruction>&);
+	void takeTurn(const bool&, Board&);
+	void print(ostream&);
+	void printVars(ostream&);
+
+	class Instruction
+	{
+	private:
+		//library of functions that take in arguments and act on the given creature.
+		//Used by the instruction class to select what they do when executing run.
+		static const unordered_map<InstLabel, function<void(Creature&, Board&, const vector<uint>&)>> instLib;
+		//keys to the Instuction library. Used for randomly selecting a function from the library.
+		static const vector<InstLabel> libKeys;
+		static const vector<InstLabel> initLibKeys();
+
+		//TODO: figure out a cleaner way to make args rather than including extra args
+		static const uint NUM_ARGS = 3;
+
+		static const unordered_map<InstLabel, function<string(const Creature&, const vector<uint>&)>> printInst;
+
+		InstLabel _label;
+		vector<uint> _args;
+
+		vector<uint> randArgs(uint);
+		InstLabel randKey();
+	public:
+		Instruction();
+		Instruction(InstLabel);
+		Instruction(InstLabel, const vector<uint>&);
+		void run (Creature&, Board&);
+		void mutate ();
+		string toString(const Creature&);
+	};
+};
+
+class Board
+{
+private:
+	uint _width;
+	uint _height;
+	vector<vector<Creature*>> _grid;
+	bool _turn;
+
+public:
+	Board(uint, uint);
+	void print(ostream&);
+	void printCreatures(ostream&);
+	uint rows();
+	uint cols();
+	void addCreature(const uint&, const uint&, const uint&);
+	void addCreature(const uint&, const uint&, const uint&, const deque<Creature::Instruction>&);
+	Creature* getCreatureAt(const uint&, const uint&);
+	pair<uint, uint> moveCreature(const uint&, const uint&, const int&, const int&);
+	void removeCreature(const uint&, const uint&);
+	void runTurn();
+};
+
+#endif
