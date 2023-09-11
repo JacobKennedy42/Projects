@@ -126,6 +126,9 @@ public class AIHandwritingProject
 			
 			percentCorrect = (numCorrect / (float) numImages) * 100;
 			System.out.println("Test #" + test + ". Percent Correct: " + percentCorrect + "%");
+			if (DISPLAY_ON) {
+				display.setText("Test #" + test + ". Percent Correct: " + percentCorrect + "%");
+			}
 			
 			//every 50th test, try to save the net
 			if (test % READ_TESTS_PER_SAVE == READ_TESTS_PER_SAVE - 1)
@@ -193,13 +196,15 @@ public class AIHandwritingProject
 			//calculate and display the percent correct every 10000 tests
 			if (test % 1000 == 999)
 			{				
-				percentCorrect = numCorrect / 10f; // numCorrect/1000 * 100 
-				System.out.println("Test #" + test + ". Percent Correct: " + percentCorrect + "% Cost: " +
-									MrsWriter.getCost(newRequest));
+				percentCorrect = numCorrect / 10f; // numCorrect/1000 * 100
+				String testString = "Test #" + test + ". Percent Correct: " + percentCorrect + "% Cost: " +
+						MrsWriter.getCost(newRequest);
+				System.out.println(testString);
 				numCorrect = 0;
 				
 				if (DISPLAY_ON)
 				{
+					display.setText(testString);
 					display.repaint();
 				}
 			}

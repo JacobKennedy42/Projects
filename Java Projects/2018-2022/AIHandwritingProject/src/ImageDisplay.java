@@ -2,7 +2,9 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JFrame;
@@ -10,6 +12,8 @@ import javax.swing.JPanel;
 
 public class ImageDisplay extends JFrame
 {	
+	private String text = "Test results:";
+	
 	public ImageDisplay (int inRows, int inCols, Node[] inNodes)
 	{
 		InitUI(inRows, inCols, inNodes);
@@ -20,11 +24,20 @@ public class ImageDisplay extends JFrame
 		ImagePanel panel = new ImagePanel(inRows, inCols, inNodes);
 		add(panel);
 		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	double screenWidth = screenSize.getWidth();
+    	double screenHeight = screenSize.getHeight();
+		
 		setTitle("imageSurface");
-		setSize(1000, 1000);
+//		setSize(1000, 1000);
+		setSize ((int) (screenWidth/1.5), (int) (screenHeight/1.33));
 		setLocationRelativeTo(null);
 		setFocusable(true);
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public void setText (String newText) {
+		text = newText;
 	}
 	
 	private class ImagePanel extends JPanel
@@ -32,7 +45,7 @@ public class ImageDisplay extends JFrame
 		//the nodes that holds the pixel values of the image
 		private Node[] imageNodes;
 		private Rectangle2D.Float[][] displayGrid;
-		private final int TILE_SIZE = 25;
+		private final int TILE_SIZE = 10;
 		
 		public ImagePanel (int inRows, int inCols, Node[] inNodes)
 		{
@@ -47,6 +60,7 @@ public class ImageDisplay extends JFrame
 				}
 			}
 		}
+
 		
 		//draws the components
 		private void draw (Graphics g)
@@ -75,6 +89,8 @@ public class ImageDisplay extends JFrame
 	    			g2d.fill(displayGrid[r][c]);
 	    		}
 	    	}
+	    	
+	    	g2d.drawString(text, 0, 300);
 		}
 		
 		//Paints the components

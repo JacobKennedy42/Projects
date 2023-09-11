@@ -17,7 +17,7 @@ public class MineSweeper extends JFrame
 	//organized row, then column
 	public static ArrayList<ArrayList<Tile>> board = new ArrayList<ArrayList<Tile>>();
 	
-	public static final int TILE_SIZE = 50;
+	public static final int TILE_SIZE = 20;
 	public static final int BOARD_SIZE = 20;
 	public static final int MINE_NUM = 100;
 	
@@ -44,9 +44,14 @@ public class MineSweeper extends JFrame
 		surface = new Surface();
 		
 		add(surface);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	double screenWidth = screenSize.getWidth();
+    	double screenHeight = screenSize.getHeight();
 	    
     	setTitle ("MineSweeper");
-    	setSize (1100, 1100);
+    	setSize ((int) (screenWidth/1.5), (int) (screenHeight/1.33));
+//    	setSize (1100, 1100);
     	setLocationRelativeTo (null);
     	//setLocation(100, 100);
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -229,10 +234,7 @@ public class MineSweeper extends JFrame
 	    			}
 	    			
 	    			else if (tile.isRevealed())
-	    			{
-	    				//TODO: test
-	    				System.out.println(numbers);
-	    				
+	    			{	
 	    				g2d.drawImage(numbers, (int) tile.getX(), (int) tile.getY(), (int) tile.getX() + TILE_SIZE, (int) tile.getY() + TILE_SIZE, 
 	    						((numbers.getWidth() / 8) * (tempNum - 1)), 0, ((numbers.getWidth() / 8) * tempNum), numbers.getHeight(), null);
 	    			}

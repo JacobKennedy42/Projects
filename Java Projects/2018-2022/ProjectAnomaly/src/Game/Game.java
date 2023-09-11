@@ -99,7 +99,7 @@ public class Game extends JFrame
 	private static final int FRAME_RATE = 31;
 	
 	//size of the tiles
-	public static int tileSize = 30;
+	public static int tileSize = 10;
 	//The dimensions of the board
 	public static final int BOARD_SIZE = 50;
 	
@@ -165,16 +165,15 @@ public class Game extends JFrame
     {
     	surface = new Surface();
     	add(surface);
-    	
     	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     	double screenWidth = screenSize.getWidth();
     	double screenHeight = screenSize.getHeight();
     
     	setTitle ("Project Anomaly");
-    	//setSize ((int) screenWidth, (int) screenHeight);
-    	setSize (2200, 1600);
-//    	setLocationRelativeTo (null);
-    	setLocation(1000, 100);
+    	setSize ((int) (screenWidth/1.5), (int) (screenHeight/1.33));
+//    	setSize (2200, 1600);
+    	setLocationRelativeTo (null);
+//    	setLocation(1000, 100);
     	setFocusable(true);
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
