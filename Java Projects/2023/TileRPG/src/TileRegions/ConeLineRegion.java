@@ -1,38 +1,38 @@
 package TileRegions;
 
 import java.awt.Color;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 import Game.Tile;
 import Game.Tile.TileCondition;
 
-public class RadiatingLinesRegion implements TileRegion {
-	
+public class ConeLineRegion implements TileRegion {
+
 	private LinkedList<LineRegion> _lines;
 	private TileCondition _selectionCondition;
 	
-	public RadiatingLinesRegion (Tile origin, int distance, boolean includeOrigin) {
-		this (origin, distance, includeOrigin, Tile.NON_BLOCKING);
+	public ConeLineRegion (Tile origin, Tile directionTile, int distance, boolean includeOrigin) {
+		this (origin, directionTile, distance, includeOrigin, Tile.NON_BLOCKING);
 	}
-	
-	public RadiatingLinesRegion (Tile origin, int distance, boolean includeOrigin, TileCondition selectionCondition) {
+	public ConeLineRegion (Tile origin, Tile directionTile, int distance, boolean includeOrigin, TileCondition selectionCondition) {
 		_selectionCondition = selectionCondition;
-		_lines = selectTiles(origin, distance, includeOrigin);
+		_lines = selectTiles(origin, directionTile, distance, includeOrigin);
 	}
 	
-	private LinkedList<LineRegion> selectTiles (Tile origin, int distance, boolean includeOrigin) {
+	private LinkedList<LineRegion> selectTiles (Tile origin, Tile directionTile, int distance, boolean includeOrigin) {
 		LinkedList<LineRegion> lines = new LinkedList<LineRegion>();
 		if (includeOrigin)
 			lines.add(new LineRegion(origin, _selectionCondition));
-		for (Tile neighbor : origin.getNeighbors())
-			lines.addLast(new LineRegion(origin, neighbor, distance, false, _selectionCondition));
+		Tile leftTile = origin.getNeighborOppositeLeftOf(directionTile);
+		lines.addLast(new LineRegion(origin, leftTile, distance, false, _selectionCondition));
+		Tile rightTile = origin.getNeighborOppositeRightOf(directionTile);
+		lines.addLast(new LineRegion(origin, rightTile, distance, false, _selectionCondition));
 		return lines;
 	}
 	
-	public int getDistanceFromOrigin (Tile targetTile) {
+	@Override
+	public int getDistanceFromOrigin(Tile targetTile) {
 		for (LineRegion line : _lines)
 			if (line.contains(targetTile))
 				return line.getDistanceFromOrigin(targetTile);
@@ -48,20 +48,23 @@ public class RadiatingLinesRegion implements TileRegion {
 		}
 		return null;	
 	}
-	
-	public boolean contains (Tile soughtTile) {		
+
+	@Override
+	public boolean contains(Tile soughtTile) {
 		for (LineRegion line : _lines)
 			if (line.contains(soughtTile))
 				return true;
 		return false;
 	}
-	
-	public void colorTilesToBase () {
+
+	@Override
+	public void colorTilesToBase() {
 		for (LineRegion line : _lines)
 			line.colorTilesToBase();
 	}
-	
-	public void colorTilesTo (Color color) {
+
+	@Override
+	public void colorTilesTo(Color color) {
 		for (LineRegion line : _lines)
 			line.colorTilesTo(color);
 	}

@@ -1,12 +1,10 @@
 package TileRegions;
 
 import java.awt.Color;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.List;
 
-import Game.Pair;
 import Game.Tile;
 import Game.Tile.TileCondition;
 
@@ -16,36 +14,57 @@ public class EmanationRegion implements TileRegion {
 	private TileCondition _selectionCondition;
 	private TileCondition _propagationCondition;
 	
-	private LinkedList<Layer> selectTiles (Tile origin, int radius, boolean includeOrigin) {
-		LinkedList<Layer> layers = new LinkedList<Layer>();
-		Layer previousLayer = null;
-		Layer currentLayer = new Layer(origin);
-		Layer nextLayer;
-		
-		do {
-			layers.add(currentLayer);
-			nextLayer = currentLayer.makeNextLayer(previousLayer, _selectionCondition, _propagationCondition);
-			previousLayer = currentLayer;
-			currentLayer = nextLayer;
-		} while (layers.size() <= radius && currentLayer.size() > 0);
-		
+	private LinkedList<Layer> selectTiles (Tile origin, int numLayers, int layerThickness, boolean includeOrigin) {
+		LinkedList<Layer> layers = selectTiles(new Layer(origin), numLayers, layerThickness, Tile.NONE);
 		if (!includeOrigin)
 			layers.set(0, new Layer());
-		
-		return layers;	
+		return layers;
 	}
 	
-	private Layer getOuterLayer () {
+	private LinkedList<Layer> selectTiles (Tile origin, int layerThickness, TileCondition soughtCondition) {
+		return selectTiles(new Layer(origin), Integer.MAX_VALUE, layerThickness, soughtCondition);
+	}
+	
+	private LinkedList<Layer> selectTiles (Layer startingLayer, int numLayers, int layerThickness, TileCondition soughtCondition) {
+		LinkedList<Layer> layers = new LinkedList<Layer>();
+		Layer nextLayer = startingLayer;
+		
+		do {	
+			layers.add(nextLayer);
+			nextLayer = nextLayer.makeNextLayer(layerThickness, _selectionCondition, _propagationCondition);
+		} while (layers.size() < numLayers && nextLayer.size() > 0 && layers.getLast().getTilesWith(soughtCondition).size() <= 0);
+		
+		return layers;
+	}
+	
+	public Tile getNextMovementTile (Tile targetTile) {
+		List<Tile> path = createPathFromOriginTo (targetTile, false);
+		if (path == null || path.size() == 0)
+			return null;
+		if (path.size() == 1)
+			return path.get(0);
+
+		Layer originLayer = _layers.get(0);
+		Layer firstLayer = _layers.get(1);
+		Tile furthestTile = null;
+		for (Tile tile : path) {
+			if (!originLayer.contains(tile) && !firstLayer.contains(tile))
+				break;
+			furthestTile = tile;
+		}
+		return furthestTile;
+	}
+	
+	public Layer getOuterLayer () {
 		return _layers.getLast();
 	}
 
-	public Collection<Tile> getOuterTilesWith (TileCondition soughtCondition) {
+	public List<Tile> getOuterTilesWith (TileCondition soughtCondition) {
 		return getOuterLayer().getTilesWith(soughtCondition);
 	}
 	
 	public boolean addLayer () {
-		Layer previousLayer = _layers.size() > 1 ? _layers.get(_layers.size()-2) : null;
-		Layer newLayer = getOuterLayer().makeNextLayer(previousLayer, _selectionCondition, _propagationCondition);
+		Layer newLayer = getOuterLayer().makeNextLayer(_selectionCondition, _propagationCondition);
 		if (newLayer.size() > 0)
 			return _layers.add(newLayer);
 		return false;
@@ -53,112 +72,72 @@ public class EmanationRegion implements TileRegion {
 
 	public int numLayers () {return _layers.size();}
 	
-	public EmanationRegion (Tile origin, boolean includeOrigin) {
-		this(origin, 1, includeOrigin, Tile.NON_BLOCKING);
+	public int numTiles () {
+		int sum = 0;
+		for (Layer layer : _layers)
+			sum += layer.size();
+		return sum;
 	}
 	
-	public EmanationRegion (Tile origin, boolean includeOrigin, TileCondition selectionCondition) {
-		this(origin, 1, includeOrigin, selectionCondition);
-	}
-	
-	public EmanationRegion (Tile origin, boolean includeOrigin, TileCondition selectionCondition, TileCondition propagationCondition) {
-		this(origin, 1, includeOrigin, selectionCondition, propagationCondition);
-	}
-	
-	public EmanationRegion (Tile origin, int radius, boolean includeOrigin) {
-		this(origin, radius, includeOrigin, Tile.NON_BLOCKING);
-	}
-	
-	public EmanationRegion (Tile origin, int radius, boolean includeOrigin, TileCondition selectionCondition) {
-		this(origin, radius, includeOrigin, selectionCondition, Tile.NON_BLOCKING);
-	}
-	
-	public EmanationRegion (Tile origin, int radius, boolean includeOrigin, TileCondition selectionCondition, TileCondition propagationCondition) {
+	public EmanationRegion (Tile origin, int layerThickness, TileCondition selectionCondition, TileCondition propagationCondition, TileCondition soughtCondition) {
 		_selectionCondition = selectionCondition;
 		_propagationCondition = propagationCondition;
-		_layers = selectTiles(origin, radius, includeOrigin);
+		_layers = selectTiles(origin, layerThickness, soughtCondition);
 	}
 	
-	public LinkedList<Tile> createPathFromOriginTo (Tile destination) {
-		LinkedList<Tile> path = new LinkedList<Tile>();
-		Tile closestTile = destination;
-		for (int distanceFromOrigin = getDistanceFromOrigin(closestTile); distanceFromOrigin >= 0; --distanceFromOrigin) {
-			path.addFirst(closestTile);
-			closestTile = getNextClosest(closestTile, distanceFromOrigin);
-		}
-		return path;
+	public EmanationRegion (Tile origin, int numLayers, int layerThickness, boolean includeOrigin, TileCondition selectionCondition, TileCondition propagationCondition) {
+		_selectionCondition = selectionCondition;
+		_propagationCondition = propagationCondition;
+		_layers = selectTiles(origin, numLayers, layerThickness, includeOrigin);
 	}
 	
-	private Tile getNextClosest (Tile currentClosest, int currentDistanceFromOrigin) {
-		if (currentClosest == null)
+	private List<Tile> createPathFromOriginTo (Tile targetTile, boolean includeTarget) {
+		if (targetTile == null)
 			return null;
 		
-		for (Tile neighbor : currentClosest.getNeighbors())
-			if (_layers.get(currentDistanceFromOrigin - 1).contains(neighbor))
-				return neighbor;
-		return null;
+		Layer targetLayer = getLayerContaining(targetTile);
+		if (targetLayer == null)
+			return null;
+		return targetLayer.createPathFromOriginTo(targetTile, includeTarget);
 	}
 	
 	public boolean contains (Tile soughtTile) {
-		for (Layer layer : _layers)
-			if (layer.contains(soughtTile))
-				return true;
-		return false;
+		return getLayerContaining(soughtTile) != null;
 	}
 	
 	public int getDistanceFromOrigin(Tile targetTile) {
-		int radius = 0;
-		for (Layer layer : _layers) {
-			if (layer.contains(targetTile))
-				return radius;
-			++radius;
-		}
-		return -1;
+		Layer targetLayer = getLayerContaining(targetTile);
+		if (targetLayer == null)
+			return -1;
+		return targetLayer.getDistanceFromOrigin(targetTile);
 	}
 	
-	public void colorTilesToDefault () {
+	public Tile getNeighborTowardsOrigin (Tile targetTile) {
+		Layer targetLayer = getLayerContaining(targetTile);
+		if (targetLayer == null)
+			return null;
+		return targetLayer.getNeighborTowardsOrigin(targetTile);
+	}
+	
+	private Layer getLayerContaining (Tile targetTile) {
 		for (Layer layer : _layers)
-			layer.colorTilesToDefault();
+			if (layer.contains(targetTile))
+				return layer;
+		return null;
+	}
+	
+	public void colorTilesToBase () {
+		for (Layer layer : _layers)
+			layer.colorTilesToBase();
 	}
 	
 	public void colorTilesTo (Color color) {
 		for (Layer layer : _layers)
 			layer.colorTilesTo(color);
 	}
-	
-	private static class EmanationRegionIterator implements Iterator<Tile> {
-
-		Iterator<Layer> _layerIterator;
-		Iterator<Tile> _currentTileIterator;
-		
-		public EmanationRegionIterator (Collection<Layer> layers) {
-			_layerIterator = layers.iterator();
-			_currentTileIterator = getNextTileIterator();
-		}
-		
-		private Iterator<Tile> getNextTileIterator () {
-			if (_layerIterator.hasNext())
-				return _layerIterator.next().iterator();
-			throw new NoSuchElementException();
-		}
-		
-		@Override
-		public boolean hasNext() {
-			return _currentTileIterator.hasNext() || _layerIterator.hasNext();
-		}
-
-		@Override
-		public Tile next() {
-			if (!_currentTileIterator.hasNext())
-				_currentTileIterator = getNextTileIterator();
-			if (_currentTileIterator.hasNext())
-				return _currentTileIterator.next();
-			throw new NoSuchElementException();
-		}	
-	}
 
 	@Override
 	public Iterator<Tile> iterator() {
-		return new EmanationRegionIterator(_layers);
+		return new RegionIterator(_layers);
 	}
 }

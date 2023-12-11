@@ -12,37 +12,37 @@ public class BoardHistory {
 	private LinkedList<BoardState> _history;
 	
 	public static class BoardState implements Iterable<BoardState.Entry> {
-		private HashMap<Pair<Integer, Integer>, Tile.TileState> _tileStates;
+		private HashMap<Pair<Integer, Integer>, Tile> _tileStates;
 		
 		public BoardState () {
-			_tileStates = new HashMap<Pair<Integer, Integer>, Tile.TileState>();
+			_tileStates = new HashMap<Pair<Integer, Integer>, Tile>();
 		}
 		
 		public BoardState (Tile[][] initialBoard) {
 			_tileStates = makeIntialTileStates(initialBoard);
 		}
 		
-		private HashMap<Pair<Integer, Integer>, Tile.TileState> makeIntialTileStates (Tile[][] initialBoard) {
-			HashMap<Pair<Integer, Integer>, Tile.TileState> initialStates = new HashMap<Pair<Integer, Integer>, Tile.TileState>(); 
+		private HashMap<Pair<Integer, Integer>, Tile> makeIntialTileStates (Tile[][] initialBoard) {
+			HashMap<Pair<Integer, Integer>, Tile> initialStates = new HashMap<Pair<Integer, Integer>, Tile>(); 
 			for (int r = 0; r < initialBoard.length; ++r)
 				for (int c = 0; c < initialBoard.length; ++c)
 					initialStates.put(new Pair<Integer, Integer>(r, c), initialBoard[r][c].getState());
 			return initialStates;
 		}
 		
-		public void set (int r, int c, Tile.TileState newState) {
+		public void set (int r, int c, Tile newState) {
 			_tileStates.put(new Pair<Integer, Integer>(r, c), newState);
 		}
 		
-		public Tile.TileState get (int r, int c) {
+		public Tile get (int r, int c) {
 			return _tileStates.get(new Pair<Integer, Integer>(r, c));
 		}
 		
 		private static class BoardStateIterator implements Iterator<Entry> {
 
-			private Iterator<Map.Entry<Pair<Integer, Integer>, Tile.TileState>> _tileIterator;
+			private Iterator<Map.Entry<Pair<Integer, Integer>, Tile>> _tileIterator;
 			
-			public BoardStateIterator (HashMap<Pair<Integer, Integer>, Tile.TileState> tiles) {
+			public BoardStateIterator (HashMap<Pair<Integer, Integer>, Tile> tiles) {
 				_tileIterator = tiles.entrySet().iterator();
 			}
 			
@@ -53,11 +53,11 @@ public class BoardHistory {
 
 			@Override
 			public Entry next() {
-				Map.Entry<Pair<Integer, Integer>, Tile.TileState> entry = _tileIterator.next();
+				Map.Entry<Pair<Integer, Integer>, Tile> entry = _tileIterator.next();
 				if (entry == null)
 					throw new NoSuchElementException();
 				Pair<Integer, Integer> coordinates = entry.getKey();
-				Tile.TileState state = entry.getValue();
+				Tile state = entry.getValue();
 				return new Entry(coordinates.first, coordinates.second, state);
 			}
 		}
@@ -65,9 +65,9 @@ public class BoardHistory {
 		public static class Entry {
 			public int r;
 			public int c;
-			public Tile.TileState tileState;
+			public Tile tileState;
 			
-			public Entry (int r, int c, Tile.TileState tileState) {
+			public Entry (int r, int c, Tile tileState) {
 				this.r = r;
 				this.c = c;
 				this.tileState = tileState;
@@ -88,14 +88,14 @@ public class BoardHistory {
 		BoardState newBoardState = new BoardState();
 		for (int r = 0; r < newBoard.length; ++r)
 			for (int c = 0; c < newBoard[r].length; ++c) {
-				Tile.TileState newTileState = newBoard[r][c].getState();
+				Tile newTileState = newBoard[r][c].getState();
 				if (!newTileState.equals(getLastStateAt(r, c)))
 					newBoardState.set(r, c, newTileState);
 			}
 		_history.addFirst(newBoardState);
 	}
 	
-	private Tile.TileState getLastStateAt (int r, int c) {
+	private Tile getLastStateAt (int r, int c) {
 		for (BoardState board : _history)
 			if (board.get(r, c) != null)
 				return board.get(r, c);
@@ -112,7 +112,7 @@ public class BoardHistory {
 		for (BoardState.Entry entry : lastBoard) {
 			int r = entry.r;
 			int c = entry.c;
-			Tile.TileState lastTileState = getLastStateAt(r, c);
+			Tile lastTileState = getLastStateAt(r, c);
 			formerTileStates.add(new BoardState.Entry(r, c, lastTileState));
 		}
 		return formerTileStates;	

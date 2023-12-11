@@ -1,7 +1,6 @@
 package TargetingAIs;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.List;
 
 import Game.Tile;
 import Game.Tile.TileCondition;
@@ -10,37 +9,22 @@ import TileRegions.EmanationRegion;
 public class Closest implements AI {
 	
 	private TileCondition _selectionCondition;
-	private TileCondition _propogationCondition;
+	private TileCondition _propagationCondition;
 	private TileCondition _soughtCondition;
 	
-	public Closest (TileCondition selectionCondition, TileCondition propogationCondition, TileCondition soughtCondition) {
+	public Closest (TileCondition selectionCondition, TileCondition propagationCondition, TileCondition soughtCondition) {
 		_selectionCondition = selectionCondition;
-		_propogationCondition = propogationCondition;
+		_propagationCondition = propagationCondition;
 		_soughtCondition = soughtCondition;
 	}
 	
-	public LinkedList<Tile> getPathToTarget (Tile origin) {
-		EmanationRegion region = new EmanationRegion(origin, false, _selectionCondition, _propogationCondition);
-		Collection<Tile> foundTiles;
-		while ((foundTiles = region.getOuterTilesWith(_soughtCondition)).size() <= 0
-				&& region.addLayer());
-		Tile targetTile = randomChooseTile(foundTiles);
-		return region.createPathFromOriginTo(targetTile);
-	}
-	
-	private Tile randomChooseTile (Collection<Tile> tiles) {
-		if (tiles == null || tiles.size() <= 0)
+	public Tile getNextMovementTile (Tile origin, int movementPerTurn) {
+		EmanationRegion region = new EmanationRegion (origin, movementPerTurn, _selectionCondition, _propagationCondition, _soughtCondition);
+		List<Tile> foundTiles = region.getOuterTilesWith(_soughtCondition);
+		if (foundTiles.size() == 0)
 			return null;
-		
-		int randomIndex = (int) (Math.random() * tiles.size());
-		int i = 0;
-		for (Tile tile : tiles) {
-			if (i == randomIndex)
-				return tile;
-			++i;
-		}
-		
-		throw new RuntimeException("Got to the end of chooseRandomTile");
+		Tile targetTile = Tile.randomChooseFrom(foundTiles);
+		return region.getNextMovementTile(targetTile);
 	}
 	
 	@Override

@@ -1,9 +1,7 @@
 package TargetingAIs;
 
-import java.util.LinkedList;
-
 import Game.Tile;
 
 public interface AI {
-	public LinkedList<Tile> getPathToTarget (Tile origin);
+	public Tile getNextMovementTile (Tile origin, int movementPerTurn);
 }
