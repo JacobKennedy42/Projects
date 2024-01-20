@@ -16,13 +16,19 @@ public class MobLabel {
 		return _label;
 	}
 	
-	public static final MobLabel SWORDSMAN = new MobLabel("SWORDSMAN");
-	public static final MobLabel ARCHER = new MobLabel("ARCHER");
+	public static final MobLabel WARRIOR = new MobLabel("WARRIOR");
 	public static final MobLabel ROGUE = new MobLabel("ROGUE");
 	public static final MobLabel WIZARD = new MobLabel("WIZARD");
 	public static final MobLabel DRUID = new MobLabel("DRUID");
+	public static final MobLabel CLERIC = new MobLabel("CLERIC");
+	public static final MobLabel ALCHEMIST = new MobLabel("ALCHEMIST");
+	public static final MobLabel BARD = new MobLabel("BARD");
+	public static final MobLabel MONK = new MobLabel("MONK");
 	
-	public static final MobLabel ENEMY = new MobLabel("ENEMY");
+	public static final MobLabel ZOMBIE = new MobLabel("ZOMBIE");
+	public static final MobLabel SKELETON = new MobLabel("SKELETON");
+	
+	public static final MobLabel GIANT_WORM_HEAD = new MobLabel("GIANT WORM HEAD");
 	
 	public static final MobLabel WALL = new MobLabel("WALL");
 }

@@ -12,7 +12,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -22,13 +21,16 @@ public class Canvas extends JPanel{
 	private static final String TUTORIAL_TEXT = 
 		"""
 		Use the heros to defeat the red enemies.
-		Hover over a hero or enemy to see their statistics and weapons.
-		To move a hero, right-click the hero, then left click on a tile in range.
-		To use a hero's weapon,  left-click the hero, then select a valid target/tile.
-		Click the Undo button to undo previous movement and actions taken this turn.
-		Click the Turn button to go to the next turn.
+		Hover over creature to see stats and abilities.
+		To move, right-click hero, then left-click on target.
+		To use ability,  left-click hero, then left-click a target/ability.
+		Click Turn button to start next turn.
+		Click Undo to undo last action this turn.
 		
 		Flanking - Applies effect when enemy is sandwiched between two heros.
+		Shield - Extra health. Removed at start of turn
+		Push - Move target X away. Colliding creatures both take X damage.
+		Slow Tile - Creature may only move 1 tile on slow tiles.
 		""";
 	
 	@FunctionalInterface
@@ -40,12 +42,12 @@ public class Canvas extends JPanel{
 		this(defaultCanvasObjects());
 	}	
 	private static LinkedList<CanvasObject> defaultCanvasObjects () {
-		MobDisplay mobDisplay = new MobDisplay(220, 20);
+		MobDisplay mobDisplay = new MobDisplay(Tile.TILE_WIDTH*12, Tile.TILE_HEIGHT);
 		CanvasTileCallback displayCallback = (Tile tile) -> mobDisplay.setMob(tile.getMob());
 		ActionSelectionOverlay overlay = new ActionSelectionOverlay(0, 0);
 		Board board = new Board(Tile.TILE_WIDTH, Tile.TILE_HEIGHT, 10, 10, displayCallback, overlay);
-		TurnButton nextTurnButton = new TurnButton(0, 250, "Turn: ", Color.cyan, () -> board.nextTurn());
-		Button undoButton = new Button(150, 250, "Undo", Color.cyan, () -> board.undo());
+		TurnButton nextTurnButton = new TurnButton(150, Tile.TILE_HEIGHT*12, "Turn: ", Color.cyan, () -> board.nextTurn());
+		Button undoButton = new Button(300, Tile.TILE_HEIGHT*12, "Undo", Color.cyan, () -> board.undo());
 		return new LinkedList<CanvasObject>(Arrays.asList(board, nextTurnButton, undoButton, mobDisplay, overlay));
 	}
 	
@@ -66,17 +68,17 @@ public class Canvas extends JPanel{
 	private void draw (Graphics2D g) {
 		RenderingHints rh = new RenderingHints (
         		RenderingHints.KEY_RENDERING,
-        		RenderingHints.VALUE_RENDER_SPEED);
+        		RenderingHints.VALUE_RENDER_QUALITY);
     	g.setRenderingHints (rh);
     	
     	for (CanvasObject object : _objects)
     		object.draw(g);
     	
-    	drawString(g, TUTORIAL_TEXT, 0, 300);
+    	drawString(g, TUTORIAL_TEXT, 460, 300);
 	}
 
 	public static void drawString (Graphics2D g, String string, int x, int y) {
-		g.setColor(Color.black);
+		g.setColor(Color.white);
 		int lineHeight = g.getFontMetrics().getHeight();
 		int textX = x;
 		int textY = y;

@@ -2,7 +2,6 @@ package UI;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 public class Button implements CanvasObject {
 
@@ -33,7 +32,7 @@ public class Button implements CanvasObject {
 	public void draw(Graphics2D g) {
 		_background.draw(g, _x, _y);
 		g.setPaint(Color.black);
-		g.drawString(_text, _x+(BUTTON_WIDTH/2), _y+(BUTTON_HEIGHT/2));
+		g.drawString(_text, _x, _y);
 	}
 
 	@Override
@@ -47,8 +46,12 @@ public class Button implements CanvasObject {
 	}
 	
 	private boolean clickButton (int x, int y) {
-		if (x >= _x && x < _x + BUTTON_WIDTH &&
-			y >= _y && y < _y + BUTTON_HEIGHT) {
+		int leftBound = _x - (BUTTON_WIDTH/2);
+		int rightBound = _x + (BUTTON_WIDTH/2);
+		int upBound = _y - (BUTTON_HEIGHT/2);
+		int downBound = _y + (BUTTON_HEIGHT/2);
+		if (x >= leftBound && x < rightBound &&
+				y >= upBound && y < downBound) {
 			_action.performAction();
 			return true;
 		}

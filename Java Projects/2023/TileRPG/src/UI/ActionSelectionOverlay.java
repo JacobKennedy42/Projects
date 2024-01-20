@@ -29,16 +29,14 @@ public class ActionSelectionOverlay implements CanvasObject {
 		private Action _action;
 		
 		public ActionSlot (int x, int y, Action action) {
-			_background = new ColoredEllipse(SLOT_RADIUS*2, SLOT_RADIUS*2, Color.black);
+			_background = new ColoredEllipse(SLOT_RADIUS*2, SLOT_RADIUS*2, Color.gray);
 			_x = x;
 			_y = y;
 			_action = action;
 		}
 		
 		public boolean leftMouseButtonReleased (int x, int y) {
-			int centerX = _x + SLOT_RADIUS;
-			int centerY = _y + SLOT_RADIUS;
-			if (distanceBetween(x, y, centerX, centerY) > SLOT_RADIUS)
+			if (distanceBetween(x, y, _x, _y) > SLOT_RADIUS)
 				return false;
 			
 			_callback.callback(_action);
@@ -82,7 +80,7 @@ public class ActionSelectionOverlay implements CanvasObject {
 	
 	public void setActive(int tileX, int tileY, Tile actionTile, ActionCallback callback) {
 		allignToTile(tileX, tileY);
-		createActionSlots(actionTile, actionTile.getMob().getAllActions());
+		createActionSlots(actionTile, actionTile.getCreatureMob().getAllActions());
 		_callback = callback;
 		_isActive = true;
 	}
@@ -97,17 +95,15 @@ public class ActionSelectionOverlay implements CanvasObject {
 		}
 	}
 	private int positionToX (int position) {
-		return _x + OVERLAY_RADIUS - ActionSlot.SLOT_RADIUS - (int)((OVERLAY_RADIUS/2) * Math.cos(position * SLOT_ANGLE)); 
+		return _x - (int)((OVERLAY_RADIUS/2) * Math.cos(position * SLOT_ANGLE)); 
 	}
 	private int positionToY (int position) {
-		return _y + OVERLAY_RADIUS - ActionSlot.SLOT_RADIUS - (int)((OVERLAY_RADIUS/2) * Math.sin(position * SLOT_ANGLE)); 
+		return _y - (int)((OVERLAY_RADIUS/2) * Math.sin(position * SLOT_ANGLE));
 	}
 	
-	public void allignToTile (int tileX, int tileY) {
-		int tileCenterX = Tile.xToCenterX(tileX);
-		int tileCenterY = Tile.yToCenterY(tileY);
-		_x = tileCenterX - OVERLAY_RADIUS;
-		_y = tileCenterY - OVERLAY_RADIUS;
+	public void allignToTile (int tileCenterX, int tileCenterY) {
+		_x = tileCenterX;
+		_y = tileCenterY;
 	}
 	
 	public void setInactive () {

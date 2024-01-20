@@ -40,6 +40,14 @@ class Layer implements TileRegion {
 		return foundTiles;
 	}
 	
+	public void removeTilesWith (TileCondition removalCondition) {
+		List<Tile> toBeRemoved = new LinkedList<Tile>();
+		for (Tile tile : _tiles)
+			if (tile.fitsCondition(removalCondition))
+				toBeRemoved.add(tile);
+		_tiles.removeAll(toBeRemoved);
+	}
+	
 	private boolean add (Tile tile) {
 		return _tiles.add(tile);
 	}
@@ -57,7 +65,6 @@ class Layer implements TileRegion {
 		List<Tile> unpropagatedTiles = _tiles;
 		List<Tile> selectedTiles;
 		for (int i = 0; i < thickness && unpropagatedTiles.size() > 0; ++i){
-			unpropagatedTiles = Tile.randomlyOrder(unpropagatedTiles);
 			selectedTiles = propagateTiles(nextLayer, unpropagatedTiles, selectionCondition, propagationCondition);
 			for (Tile tile : selectedTiles)
 				nextLayer.add(tile);

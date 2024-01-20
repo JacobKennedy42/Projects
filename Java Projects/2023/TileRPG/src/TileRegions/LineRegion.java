@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import Game.Tile;
 import Game.Tile.TileCondition;
 
-class LineRegion implements TileRegion {
+public class LineRegion implements TileRegion {
 
 	private Tile _origin;
 	private boolean _includeOrigin;
@@ -35,8 +35,8 @@ class LineRegion implements TileRegion {
 		LinkedList<Tile> lineSoFar;
 		if (distance <= 0 || directionTile == null)
 			lineSoFar = new LinkedList<Tile>();
-		else if (!origin.fitsCondition(selectionCondition))
-			if (piercing > 0)
+		else if (!origin.fitsCondition(selectionCondition) && origin != _origin)	//_origin should not count as pierced
+			if (piercing > 1)
 				lineSoFar = makeLine(directionTile,
 					directionTile.getNeighborOppositeOf(origin),
 					distance - 1,
@@ -54,11 +54,8 @@ class LineRegion implements TileRegion {
 									piercing);
 		
 		if (includeOrigin
-				&& (origin.fitsCondition(selectionCondition) || piercing >= 0))
+				&& (origin.fitsCondition(selectionCondition) || piercing > 0))
 			lineSoFar.addFirst(origin);
-////		else if (distance <= 0 || directionTile == null)
-//		else if (origin == _origin)
-//			lineSoFar.addFirst(null);	//null added so index can still be used as distance from origin
 		
 		return lineSoFar;
 	}
@@ -104,6 +101,20 @@ class LineRegion implements TileRegion {
 				tile.colorTo(color);
 	}
 	
+	public Tile getLastTile () {
+		if (_tiles.size() == 0)
+			return null;
+		return _tiles.getLast();
+	}
+	public Tile getSecondToLast () {
+		if (_tiles.size() < 2)
+			return null;
+		return _tiles.get(_tiles.size()-2);
+	}
+	
+	public int numTiles () {
+		return _tiles.size();
+	}
 
 	@Override
 	public Iterator<Tile> iterator() {

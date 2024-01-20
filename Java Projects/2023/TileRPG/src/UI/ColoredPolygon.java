@@ -7,8 +7,8 @@ import java.awt.geom.Rectangle2D;
 
 public class ColoredPolygon implements ColoredShape {
 
-	Polygon _shape;
-	Color _color;
+	private Polygon _shape;
+	private Color _color;
 	
 	public ColoredPolygon (int[] xPoints, int[] yPoints, Color color) {
 		if (xPoints.length != yPoints.length)
@@ -22,19 +22,31 @@ public class ColoredPolygon implements ColoredShape {
 	public void setColor(Color color) {
 		_color = color;
 	}
+	
+	@Override
+	public Color getColor() {
+		return _color;
+	}
 
 	@Override
-	public void draw(Graphics2D g, int x, int y) {
+	public void draw(Graphics2D g, int centerX, int centerY) {
 		g.setPaint(_color);
-		movePolygonTo(x, y);
+		movePolygonTo(centerX, centerY);
 		g.fill(_shape);
 	}
 	
-	private void movePolygonTo (int x, int y) {
+	private void movePolygonTo (int centerX, int centerY) {
 		Rectangle2D bounds = _shape.getBounds2D();
-		int deltaX = (int)(x - bounds.getX());
-		int deltaY = (int)(y - bounds.getY());
+		int currentCenterX = (int)(bounds.getX() + bounds.getWidth()/2);
+		int currentCenterY = (int)(bounds.getY() + bounds.getHeight()/2);
+		int deltaX = (int)(centerX - currentCenterX);
+		int deltaY = (int)(centerY - currentCenterY);
 		_shape.translate(deltaX, deltaY);
 	}
 
+	public boolean equals (ColoredPolygon other) {
+		return _shape.equals(other._shape)
+				&& _color.equals(other._color);
+	}
+	
 }

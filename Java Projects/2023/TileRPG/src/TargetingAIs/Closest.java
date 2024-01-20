@@ -1,38 +1,58 @@
 package TargetingAIs;
 
+import java.awt.Color;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import Game.Tile;
 import Game.Tile.TileCondition;
+import Items.Action;
 import TileRegions.EmanationRegion;
+import TileRegions.TileRegion;
 
 public class Closest implements AI {
 	
-	private TileCondition _selectionCondition;
-	private TileCondition _propagationCondition;
-	private TileCondition _soughtCondition;
+	private TileCondition _propogationCondition;
 	
-	public Closest (TileCondition selectionCondition, TileCondition propagationCondition, TileCondition soughtCondition) {
-		_selectionCondition = selectionCondition;
-		_propagationCondition = propagationCondition;
-		_soughtCondition = soughtCondition;
+	public Closest (TileCondition propogationCondition) {
+		_propogationCondition = propogationCondition;
 	}
 	
-	public Tile getNextMovementTile (Tile origin, int movementPerTurn) {
-		EmanationRegion region = new EmanationRegion (origin, movementPerTurn, _selectionCondition, _propagationCondition, _soughtCondition);
-		List<Tile> foundTiles = region.getOuterTilesWith(_soughtCondition);
-		if (foundTiles.size() == 0)
+//	public List<Tile> getMovementPath (Tile origin, int movementPerTurn, Action action) {
+//		Collection<Tile> soughtTiles = getSoughtTiles(origin.getAllPlayers(), action);
+	public List<Tile> getMovementPath (Tile origin, int movementPerTurn, Collection<Tile> soughtTiles) {
+//		Collection<Tile> soughtTiles = getSoughtTiles(origin.getAllPlayers(), action);
+		EmanationRegion movementRegion = new EmanationRegion(origin, movementPerTurn,
+				Tile.HAS_SPACE_FOR(origin.getMob()).or(Tile.HAS_PLAYER_MOB),
+				_propogationCondition,
+				Tile.IS_CONTAINED_IN(soughtTiles));
+		Tile destination = movementRegion.getClosestOuterTileWith(Tile.IS_CONTAINED_IN(soughtTiles));
+		
+		return movementRegion.getMovementPath(destination);
+	}
+	
+//	private Collection<Tile> getSoughtTiles (Collection<Tile> playerTiles, Action action) {
+//		HashSet<Tile> soughtTiles =  new HashSet<Tile>();
+//		for (Tile target : playerTiles)
+//			soughtTiles.addAll(action.getAreaOfInfluence(target));	//Assumes that if player can hit enemy, enemy can hit player
+//		return soughtTiles;
+//	}
+	
+	public Tile getTargetFrom (Tile origin, Action action) {
+		if (origin == null)
 			return null;
-		Tile targetTile = Tile.randomChooseFrom(foundTiles);
-		return region.getNextMovementTile(targetTile);
+		
+		TileRegion inRangeTiles = action.getTilesInRangeFrom(origin);
+		for (Tile tile : inRangeTiles)
+			if (tile != null && tile.fitsCondition(Tile.HAS_PLAYER_MOB))
+				return tile;
+		return null;
 	}
 	
-	@Override
-	public boolean equals (Object other) {
-		if (!(other instanceof Closest))
-			return false;
-		Closest otherAI = (Closest) other;
-		return _selectionCondition == otherAI._selectionCondition
-				&& _soughtCondition == otherAI._soughtCondition;
+	public boolean equals (Closest other) {
+		return other != null
+				&&_propogationCondition == other._propogationCondition;
 	}
 }

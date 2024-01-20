@@ -37,30 +37,61 @@ public class EmanationRegion implements TileRegion {
 		return layers;
 	}
 	
-	public Tile getNextMovementTile (Tile targetTile) {
-		List<Tile> path = createPathFromOriginTo (targetTile, false);
+	private void removeTilesWith (TileCondition removalCondition) {
+		for (Layer layer : _layers)
+			layer.removeTilesWith(removalCondition);
+	}
+	
+	public List<Tile> getMovementPath (Tile targetTile) {
+		List<Tile> path = createPathFromOriginTo (targetTile, true);
 		if (path == null || path.size() == 0)
 			return null;
 		if (path.size() == 1)
-			return path.get(0);
+			return path;
 
-		Layer originLayer = _layers.get(0);
-		Layer firstLayer = _layers.get(1);
+		Layer originLayer = getOriginLayer();
+		Layer firstLayer = getInnerLayer();
 		Tile furthestTile = null;
 		for (Tile tile : path) {
 			if (!originLayer.contains(tile) && !firstLayer.contains(tile))
 				break;
 			furthestTile = tile;
 		}
-		return furthestTile;
+		return createPathFromOriginTo (furthestTile, true);
 	}
 	
-	public Layer getOuterLayer () {
+	private Layer getOriginLayer () {
+		if (_layers.size() < 1)
+			return null;
+		return _layers.get(0);
+	}
+	
+	private Layer getInnerLayer () {
+		if (_layers.size() < 2)
+			return null;
+		return _layers.get(1);
+	}
+	
+	public List<Tile> getInnerTilesWith (TileCondition soughtCondition) {
+		return getInnerLayer().getTilesWith(soughtCondition);
+	}
+	
+	private Layer getOuterLayer () {
 		return _layers.getLast();
 	}
 
-	public List<Tile> getOuterTilesWith (TileCondition soughtCondition) {
-		return getOuterLayer().getTilesWith(soughtCondition);
+	public Tile getClosestOuterTileWith (TileCondition soughtCondition) {
+		List<Tile> outerTiles = getOuterLayer().getTilesWith(soughtCondition);
+		int closestDistance = Integer.MAX_VALUE;
+		Tile closestTile = null;
+		for (Tile tile : outerTiles) {
+			int tileDistance = getDistanceFromOrigin(tile);
+			if (tileDistance < closestDistance) {
+				closestDistance = tileDistance;
+				closestTile = tile;
+			}
+		}
+		return closestTile;
 	}
 	
 	public boolean addLayer () {
@@ -83,6 +114,11 @@ public class EmanationRegion implements TileRegion {
 		_selectionCondition = selectionCondition;
 		_propagationCondition = propagationCondition;
 		_layers = selectTiles(origin, layerThickness, soughtCondition);
+	}
+	
+	public EmanationRegion (Tile origin, int layerThickness, TileCondition selectionCondition, TileCondition propagationCondition, TileCondition soughtCondition, TileCondition removalCondition) {
+		this (origin, layerThickness, selectionCondition, propagationCondition, soughtCondition);
+		removeTilesWith(removalCondition);
 	}
 	
 	public EmanationRegion (Tile origin, int numLayers, int layerThickness, boolean includeOrigin, TileCondition selectionCondition, TileCondition propagationCondition) {

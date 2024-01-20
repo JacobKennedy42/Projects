@@ -3,6 +3,7 @@ package UI;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import Game.Tile;
 import Mobs.Mob;
 
 public class MobDisplay implements CanvasObject {
@@ -28,8 +29,8 @@ public class MobDisplay implements CanvasObject {
 		if (_mob == null)
 			return;
 		
-		_mob.getShape().draw(g, _x, _y);
-		Canvas.drawString(g, _mob.toString(), _x+20, _y);
+		_mob.draw(g, _x, _y);
+		Canvas.drawString(g, _mob.toString(), _x+(Tile.TILE_WIDTH/2), _y);
 	}
 	
 	public boolean leftMouseButtonReleased(int x, int y) {

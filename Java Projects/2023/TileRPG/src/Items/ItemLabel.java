@@ -22,4 +22,8 @@ public class ItemLabel {
 	public static final ItemLabel DAGGER = new ItemLabel("DAGGER");
 	public static final ItemLabel FIRE_WAND = new ItemLabel("FIRE WAND");
 	public static final ItemLabel EARTH_ROD = new ItemLabel("EARTH ROD");
+	public static final ItemLabel CREST = new ItemLabel("CREST");
+	public static final ItemLabel POTION_KIT = new ItemLabel("POTION KIT");
+	public static final ItemLabel LUTE = new ItemLabel("LUTE");
+	public static final ItemLabel MARTIAL_ARTS = new ItemLabel("MARTIAL ARTS");
 }

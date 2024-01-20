@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 public class ColoredRectangle implements ColoredShape{
-	public Rectangle _shape;
-	public Color _color;
+	private Rectangle _shape;
+	private Color _color;
 	
 	public ColoredRectangle (int width, int height, Color color) {
 		_shape = new Rectangle (width, height);
@@ -19,18 +19,19 @@ public class ColoredRectangle implements ColoredShape{
 	}
 	
 	@Override
-	public void draw (Graphics2D g, int x, int y) {
-		g.setPaint(_color);
-		_shape.setFrame(x, y, _shape.getWidth(), _shape.getHeight());
-		g.fill(_shape);
+	public Color getColor() {
+		return _color;
 	}
 	
 	@Override
-	public boolean equals (Object other) {
-		if (!(other instanceof ColoredRectangle))
-			return false;
-		ColoredRectangle otherShape = (ColoredRectangle) other;
-		return _shape.equals(otherShape._shape)
-				&& _color.equals(otherShape._color);
+	public void draw (Graphics2D g, int centerX, int centerY) {
+		g.setPaint(_color);
+		_shape.setFrame(centerX-(_shape.getWidth()/2), centerY-(_shape.getHeight()/2), _shape.getWidth(), _shape.getHeight());
+		g.fill(_shape);
+	}
+	
+	public boolean equals (ColoredRectangle other) {
+		return _shape.equals(other._shape)
+				&& _color.equals(other._color);
 	}
 }

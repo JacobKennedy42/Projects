@@ -10,12 +10,13 @@ import java.util.List;
 
 import Game.BoardHistory.BoardState;
 import Items.Action;
+import Mobs.EnemyMob;
 import Mobs.Mob;
-import Mobs.Mob.MobFactory;
+import Mobs.MobFactory;
 import Mobs.MobLabel;
+import Mobs.PlayerMob;
 import TileRegions.TileRegion;
 import UI.CanvasObject;
-import UI.ColoredShape;
 import UI.Canvas.CanvasTileCallback;
 import UI.ActionSelectionOverlay;
 
@@ -41,7 +42,7 @@ public class Board implements CanvasObject{
 					|| !clickedTile.hasActionableMob())
 				return;
 			
-			List<Action> availableActions = clickedTile.getMob().getAvailableActions();
+			List<Action> availableActions = clickedTile.getCreatureMob().getAvailableActions();
 			if (availableActions.size() == 1)
 				switchModeTo(new TargetSelectionMode(clickedTile, availableActions.get(0)));
 			else
@@ -58,22 +59,30 @@ public class Board implements CanvasObject{
 			if (hoveredTile == null
 					|| hoveredTile == _hoverTile)
 				return;
+			revertHoverTileColor();
 			_hoverTile = hoveredTile;
-			_mobDisplayCallback.callback(_hoverTile);
+			hoveredTile.hover(_mobDisplayCallback);
 		}
-		public void cleanUp() {}
+		private void revertHoverTileColor () {
+			if (_hoverTile == null)
+				return;
+			_hoverTile.dehover(_mobDisplayCallback);
+		}
+		public void cleanUp() {
+			revertHoverTileColor();
+		}
 	}
 	private class MoveMode implements Mode {
 		private Tile _selectedTile;
 		private TileRegion _tilesInRange;
 		private Tile _hoverTile;
-		private static final Color TARGET_COLOR = Color.BLUE;
+		private static final Color TARGET_COLOR = Color.green;
 		
 		public MoveMode (Tile selectedTile) {
 			_selectedTile = selectedTile;
 		}
 		public void setUp () {
-			_tilesInRange = _selectedTile.getMob().getMovementTilesInRange();
+			_tilesInRange = _selectedTile.getCreatureMob().getMovementTilesInRange();
 			_tilesInRange.colorTilesTo(IN_RANGE_COLOR);
 		}
 		public void handleLeftClick (Tile clickedTile) {
@@ -82,7 +91,7 @@ public class Board implements CanvasObject{
 			
 			if (_tilesInRange.contains(clickedTile))
 				moveSelectedMobTo(clickedTile);
-			else if (clickedTile.hasPlayerMob()){
+			else {
 				switchModeTo(new NoneMode());
 				_currentMode.handleLeftClick(clickedTile);
 			}
@@ -90,11 +99,11 @@ public class Board implements CanvasObject{
 		public void handleRightClick (Tile clickedTile) {
 			if (clickedTile == null)
 				return;
-			
-			if (clickedTile == _selectedTile)
-				switchModeTo(new NoneMode());
-			else if (clickedTile.hasMovableMob())
+
+			if (clickedTile.hasMovableMob() && clickedTile != _selectedTile)
 				switchModeTo(new MoveMode(clickedTile));
+			else
+				switchModeTo(new NoneMode());
 		}
 		public void handleMouseHover (Tile hoveredTile) {
 			if (hoveredTile == null 
@@ -122,8 +131,11 @@ public class Board implements CanvasObject{
 			if (distanceFromOrigin == -1)
 				return;
 			
+			unTargetPlayers();
+			
 			boolean moveSuccessful = _selectedTile.moveMobToEmptyTile(destinationTile, distanceFromOrigin);
 			if (moveSuccessful) {
+				updateTargetedPlayers();
 				updateBoardHistory();
 				switchModeTo(new NoneMode());
 			}
@@ -138,8 +150,8 @@ public class Board implements CanvasObject{
 		private Action _action;
 		private TileRegion _tilesInRange; 
 		private Tile _hoverTile;
-		private Collection<Tile> _targetTiles;
-		private static final Color TARGET_COLOR = Color.RED;
+		private Iterable<Tile> _hoverTargetTiles;
+		private static final Color TARGET_COLOR = Color.darkGray;
 		
 		public TargetSelectionMode (Tile selectedTile, Action action) {
 			_selectedTile = selectedTile;
@@ -155,21 +167,19 @@ public class Board implements CanvasObject{
 			
 			if (_tilesInRange.contains(clickedTile))
 				performActionOn(clickedTile);
-			else if (clickedTile == _selectedTile)
-				switchModeTo(new NoneMode());
-			else if (clickedTile.hasActionableMob()) {
+			else if (clickedTile.hasActionableMob() && clickedTile != _selectedTile) {
 				switchModeTo(new NoneMode());
 				_currentMode.handleLeftClick(clickedTile);
 			}
+			else
+				switchModeTo(new NoneMode());
 		}
 		public void handleRightClick (Tile clickedTile) {
 			if (clickedTile == null)
 				return;
 			
-			if (clickedTile.hasPlayerMob()){
-				switchModeTo(new NoneMode());
-				_currentMode.handleRightClick(clickedTile);
-			}
+			switchModeTo(new NoneMode());
+			_currentMode.handleRightClick(clickedTile);
 		}
 		public void handleMouseHover (Tile hoveredTile) {
 			if (hoveredTile == null 
@@ -180,36 +190,46 @@ public class Board implements CanvasObject{
 				
 			_hoverTile = hoveredTile;
 			_mobDisplayCallback.callback(hoveredTile);
-			selectTargetTiles(_hoverTile);
+			selectHoverTargetTiles(_hoverTile);
 		}
-		private void selectTargetTiles (Tile targetTile) {
+		private void selectHoverTargetTiles (Tile targetTile) {
+			_hoverTargetTiles = getTargetTiles(targetTile);
+			for (Tile tile : _hoverTargetTiles)
+				tile.colorTo(TARGET_COLOR);
+			
+			if (_hoverTile != _selectedTile && getDirectionTile(targetTile) != null)
+				_action.applyPreview(_selectedTile, targetTile, getDirectionTile(targetTile));
+		}
+		private Iterable<Tile> getTargetTiles (Tile targetTile) {
 			if (targetTile == null
 					|| !_tilesInRange.contains(targetTile))
-				return;
+				return new LinkedList<Tile>();
 			
-			Tile directionTile = _tilesInRange.getNeighborTowardsOrigin(targetTile);
-			_targetTiles = _action.getTargets(_selectedTile, targetTile, directionTile);
-			for (Tile tile : _targetTiles)
-				tile.colorTo(TARGET_COLOR);
+			return _action.getTargets(_selectedTile, targetTile, getDirectionTile(targetTile));
 		}
 		private void revertTargetTileColor () {
-			if (_targetTiles == null)
+			if (_hoverTargetTiles == null)
 				return;
 
-			for (Tile tile : _targetTiles) {
+			for (Tile tile : _hoverTargetTiles) {
 				if (_tilesInRange.contains(tile))
 					tile.colorTo(IN_RANGE_COLOR);
 				else
 					tile.colorToBase();
 			}
+			if (_hoverTile != _selectedTile && getDirectionTile(_hoverTile) != null)
+				_action.revertPreview(_selectedTile, _hoverTile, getDirectionTile(_hoverTile));
 		}
 		private void performActionOn (Tile targetTile) {
-			Tile directionTile = _tilesInRange.getNeighborTowardsOrigin(targetTile);
-			boolean actionSuccessful = _action.doAction(_selectedTile, targetTile, directionTile);
+			boolean actionSuccessful = _action.doAction(_selectedTile, targetTile, getDirectionTile(targetTile));
 			if (actionSuccessful) {
+				updateTargetedPlayers();
 				updateBoardHistory();
 				switchModeTo(new NoneMode());
 			}
+		}
+		private Tile getDirectionTile (Tile targetTile) {
+			return _tilesInRange.getNeighborTowardsOrigin(targetTile);
 		}
 		public void cleanUp() {
 			revertTargetTileColor();
@@ -241,8 +261,9 @@ public class Board implements CanvasObject{
 			if (hoveredTile == null
 					|| hoveredTile == _hoverTile)
 				return;
+			
 			_hoverTile = hoveredTile;
-			_mobDisplayCallback.callback(_hoverTile);
+			_mobDisplayCallback.callback(hoveredTile);
 		}
 		public void cleanUp () {
 			_overlay.setInactive();
@@ -273,25 +294,37 @@ public class Board implements CanvasObject{
 	}
 	
 	public Board (int x, int y, int rows, int cols, CanvasTileCallback mobDisplayCallback, ActionSelectionOverlay overlay){
-		initializeTiles(rows, cols);
+		initializeTiles(rows, cols);		
 		_x = x;
 		_y = y;
+		
+		//TODO: worm gives null error when placed near edge. Worm canFit needs to account for children when placed, but not when looking for targets. Might be tricky
+		placeMob(rows/2, cols/2, MobFactory.get(MobLabel.GIANT_WORM_HEAD));
+		
 		placeMobsRandomly (MobFactory.get(new LinkedList<MobLabel>(Arrays.asList(
-				MobLabel.SWORDSMAN,
-				MobLabel.ARCHER,
+				MobLabel.WARRIOR,
+				MobLabel.CLERIC,
 				MobLabel.ROGUE,
 				MobLabel.WIZARD,
 				MobLabel.DRUID,
+				MobLabel.ALCHEMIST,
+				MobLabel.BARD,
+				MobLabel.MONK,
 				
-				MobLabel.ENEMY,
-				MobLabel.ENEMY,
-				MobLabel.ENEMY,
-				MobLabel.ENEMY,
-				MobLabel.ENEMY,
-				MobLabel.ENEMY,
-				MobLabel.ENEMY
+				MobLabel.ZOMBIE,
+				MobLabel.ZOMBIE,
+				MobLabel.SKELETON,
+				MobLabel.SKELETON,
+				MobLabel.ZOMBIE
 				))));
-		resetBoardHistory();
+		
+		for (int r = 0; r < _tiles.length; ++r)
+			for (int c = 0; c < _tiles[r].length; ++c)
+				if (_tiles[r][c].getNeighbors() == null)
+					System.err.println(r + " " + c);
+		
+		
+		startTurn();
 		_mobDisplayCallback = mobDisplayCallback;
 		_overlay = overlay;
 	}
@@ -311,7 +344,7 @@ public class Board implements CanvasObject{
 			row = rand/numRows;
 			col = rand%numCols;
 			nextTile = _tiles[row][col];
-			if (nextTile.getMob() == null)
+			if (mobs.get(0).canFitIn(nextTile))
 				placeMob(row, col, mobs.remove(0));
 		}
 	}
@@ -345,8 +378,8 @@ public class Board implements CanvasObject{
 			linkTilesToNeighborsClockwiseOddRows(row, col);
 	}
 	private void linkTilesToNeighborsClockwiseEvenRows (int row, int col) {
-		Collection<Tile> neighbors = new LinkedList<Tile>();
-		neighbors.add(getTile(row-1, col-1));
+		List<Tile> neighbors = new LinkedList<Tile>();
+		neighbors.add(getTile(row-1, col-1));	//start at the top left and go clockwise
 		neighbors.add(getTile(row-1, col));
 		neighbors.add(getTile(row,   col+1));
 		neighbors.add(getTile(row+1, col));
@@ -355,8 +388,8 @@ public class Board implements CanvasObject{
 		_tiles[row][col].setNeighbors(neighbors);
 	}
 	private void linkTilesToNeighborsClockwiseOddRows (int row, int col) {
-		Collection<Tile> neighbors = new LinkedList<Tile>();
-		neighbors.add(getTile(row-1, col));
+		List<Tile> neighbors = new LinkedList<Tile>();
+		neighbors.add(getTile(row-1, col));		//start at the top left and go clockwise
 		neighbors.add(getTile(row-1, col+1));
 		neighbors.add(getTile(row,   col+1));
 		neighbors.add(getTile(row+1, col+1));
@@ -366,7 +399,7 @@ public class Board implements CanvasObject{
 	}
 	
 	private void placeMob (int row, int col, Mob mob) {
-		_tiles[row][col].placeNewMob(mob);
+		_tiles[row][col].attachMob(mob);
 	}
 	
 	private void resetBoardHistory () {
@@ -384,11 +417,7 @@ public class Board implements CanvasObject{
 	}
 	
 	private void drawTile (Graphics2D g, Tile tile, int row, int col) {
-		Collection<ColoredShape> tileShapes = tile.getShapes();
-		for (ColoredShape shape : tileShapes)
-			shape.draw(g,
-					   colToCanvasX(row, col),
-					   rowToCanvasY(row));
+		tile.draw(g, colToCenterX(row, col), rowToCenterY(row));
 	}
 	
 	public boolean leftMouseButtonReleased (int x, int y) {
@@ -429,7 +458,6 @@ public class Board implements CanvasObject{
 	private void handleMouseHover (Tile hoveredTile) {
 		_currentMode.handleMouseHover(hoveredTile);
 	}
-	
 
 	private Tile canvasPointToTile (int canvasX, int canvasY) {
 		int boardY = canvasY - _y;
@@ -457,23 +485,20 @@ public class Board implements CanvasObject{
 		Pair<Integer, Integer> rowAndCol = tileToRowAndCol(tile);
 		int row = rowAndCol.first, col = rowAndCol.second;
 		return new Point(
-				colToCanvasX(row, col),
-				rowToCanvasY(row));
+				colToCenterX(row, col),
+				rowToCenterY(row));
 	}
 	
-	private int colToCanvasX (int row, int col) {
-		return _x + col*Tile.TILE_WIDTH + (row % 2) * (Tile.TILE_WIDTH/2);
+	private int colToCenterX (int row, int col) {
+		return _x + col*Tile.TILE_WIDTH + (row % 2) * (Tile.TILE_WIDTH/2) + (Tile.TILE_WIDTH/2);
 	}
-	private int rowToCanvasY (int row) {
-		return _y + row*Tile.TILE_HEIGHT;
+	private int rowToCenterY (int row) {
+		return _y + row*Tile.TILE_HEIGHT + (Tile.TILE_HEIGHT/2);
 	}
 	
 	public void nextTurn () {
-		switchModeTo(new NoneMode());
-		performNonPlayerActions();
-		resetHeros();
-//		designateNonPlayerMobActions(); TODO: Do this later
-		resetBoardHistory();
+		endTurn();
+		startTurn();
 	}
 	
 	public void undo () {
@@ -487,19 +512,61 @@ public class Board implements CanvasObject{
 		_tiles[r][c].setState(newState);
 	}
 	
-	private void resetHeros () {
-		for (Tile[] row : _tiles)
-			for (Tile tile : row)
-				tile.nextTurnReset();
+	private void startTurn () {
+		for (PlayerMob player : getPlayers())
+			player.startTurn();
+		for (EnemyMob enemy : getEnemies())
+			enemy.startTurn();
+		resetBoardHistory();
 	}
 	
-	private void performNonPlayerActions () {
-		LinkedList<Tile> nonPlayerMobTiles = new LinkedList<Tile>();
-		for (Tile[] row : _tiles)					//Get mobs first, to avoid double-counting moving mobs
+	private void endTurn () {
+		switchModeTo(new NoneMode());
+		for (PlayerMob player : getPlayers())
+			player.endTurn();
+		for (EnemyMob enemy : getEnemies())
+			enemy.endTurn();
+	}
+	
+	private Collection<EnemyMob> getEnemies () {
+		LinkedList<EnemyMob> enemies = new LinkedList<EnemyMob>();
+		for (Tile[] row : _tiles)
 			for (Tile tile : row)
-				if (tile.hasNonPlayerMob())
-					nonPlayerMobTiles.add(tile);
-		for (Tile tile : nonPlayerMobTiles)
-			tile.doNonPlayerAction();
+				if (tile.hasEnemyMob())
+					enemies.add(tile.getEnemyMob());
+		
+		List<EnemyMob> randomList = new LinkedList<EnemyMob>();
+		while (enemies.size() > 0) {
+			int randomIndex = (int) (Math.random() * enemies.size());
+			randomList.add(enemies.remove(randomIndex));
+		}
+		
+		return randomList;
+	}
+	
+	private Collection<PlayerMob> getPlayers () {
+		LinkedList<PlayerMob> players = new LinkedList<PlayerMob>();
+		for (Tile[] row : _tiles)
+			for (Tile tile : row)
+				if (tile.hasPlayerMob())
+					players.add(tile.getPlayerMob());
+		
+		List<PlayerMob> randomList = new LinkedList<PlayerMob>();
+		while (players.size() > 0) {
+			int randomIndex = (int) (Math.random() * players.size());
+			randomList.add(players.remove(randomIndex));
+		}
+		
+		return randomList;
+	}
+	
+	private void unTargetPlayers () {
+		for (EnemyMob enemy : getEnemies())
+			enemy.unTargetPlayer();;
+	}
+	
+	private void updateTargetedPlayers () {
+		for (EnemyMob enemy : getEnemies())
+			enemy.updateTargetedPlayers();
 	}
 }

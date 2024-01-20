@@ -39,6 +39,10 @@ public class Item {
 			put(ItemLabel.DAGGER,		DAGGER);
 			put(ItemLabel.FIRE_WAND,	FIRE_WAND);
 			put(ItemLabel.EARTH_ROD,	EARTH_ROD);
+			put(ItemLabel.CREST,		CREST);
+			put(ItemLabel.POTION_KIT,	POTION_KIT);
+			put(ItemLabel.LUTE,			LUTE);
+			put(ItemLabel.MARTIAL_ARTS,	MARTIAL_ARTS);
 		}
 		
 		private ItemFactory () {}
@@ -83,6 +87,38 @@ public class Item {
 			new Action (new Keyword[] {
 				new MANA_COST(2, new RADIUS(2, new MAKE_SLOW_TILE()))},
 			1, 3)});
+	private static final Item CREST = new Item (
+		new Action[] {
+			new Action (new Keyword[] {
+				new MANA_GAIN(1),
+				new HEAL()},
+			1, 3),
+			new Action (new Keyword[] {
+				new MANA_COST(1, new SHIELD())},
+			2, 3)});
+	private static final Item POTION_KIT = new Item (
+		new Action[] {
+			new Action (new Keyword[] {
+				new USE_LIMIT(2, new POISON())},
+			1, 2),
+			new Action (new Keyword[] {
+				new USE_LIMIT(2, new REGEN())},
+			1, 2)});
+	private static final Item LUTE = new Item (
+		new Action[] {
+			new Action (new Keyword[] {
+				new MANA_GAIN(1),
+				new CONE(3, new IF_FRIENDLY(new INCREMENT_POWER_ON_TARGET(1)))},
+			1, 1),
+			new Action (new Keyword[] {
+				new MANA_COST(2, new RADIUS(2, new IF_HOSTILE(new INCREMENT_POWER_ON_TARGET(-1))))},
+			1, 0)});
+	private static final Item MARTIAL_ARTS = new Item (
+			new Action[] {
+				new Action (new Keyword[] {
+					new DO_DAMAGE(),
+					new PUSH()},
+				1, 1)});
 	
 	private Item (Action[] actions) {
 		setActions(actions);
@@ -95,11 +131,20 @@ public class Item {
 	private void setActions (Action[] otherActions) {
 		_actions = new Action[otherActions.length];
 		for (int i = 0; i < _actions.length; ++i)
-			_actions[i] = otherActions[i];
+			_actions[i] = new Action(otherActions[i]);
 	}
 
 	public Action[] getActions () {
 		return _actions;
+	}
+	
+	public void incrementPowerModifier (int delta) {
+		for (Action action : _actions)
+			action.incrementPowerModifier(delta);
+	}
+	public void clearPowerModifier() {
+		for (Action action : _actions)
+			action.clearPowerModifier();
 	}
 	
 	public boolean equals (Item other) {

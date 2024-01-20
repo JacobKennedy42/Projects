@@ -1,5 +1,6 @@
 package UI;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -14,6 +15,7 @@ public class Window extends JFrame{
 	
 	private void initializeUI () {
 		canvas = new Canvas();
+		canvas.setBackground(Color.black);
 		add(canvas);
 		
 		setTitle ("Tile RPG");
