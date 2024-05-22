@@ -1,0 +1,10 @@
+.field-label{
+    box-sizing: border-box;
+    width: 120px;
+    margin-right: 5%;
+    text-align: center;
+
+    background: #E1F1FF;
+    border: 1px solid rgba(0, 0, 0, 0.75);
+    border-radius: 10px;
+}

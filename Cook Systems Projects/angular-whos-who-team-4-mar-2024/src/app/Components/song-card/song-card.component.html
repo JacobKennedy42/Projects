@@ -1,0 +1,7 @@
+<div>
+    <video class="song" #playback controls name="media" *ngIf="previewURL != ''">
+        <source src="{{previewURL}}" type="audio/mpeg">
+    </video>
+    <app-song-details *ngIf="detailsOn" [details]="details"></app-song-details>
+</div>
+

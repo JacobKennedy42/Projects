@@ -1,0 +1,54 @@
+<div class="d-flex flex-row">
+  <div class="pl-4 pt-5">
+    <p class="heading-color" (click)="goBack()"><&nbsp;Back</p>
+  </div>
+
+  <div class="justify-content-between flex-column container">
+    <div class="project-border">
+      <div class="pt-5 pb-1">
+        <h1 class="heading-color text center">Projects for {{team.name}}</h1>
+      </div>
+      <ng-container *ngIf="isAdmin$ | async">
+        <div class="button-container pb-3">
+          <button class="btn btn-primary new-button onHover" (click)="openDialog(null)">New</button>
+        </div>
+      </ng-container>
+    </div>
+
+    <ng-container *ngFor="let project of projects">
+      <div class="flex-column d-flex project-border">
+
+        <div class="d-flex flex-row pt-5">
+          <div>
+            <h4 class="text-white">{{project.name}}</h4>
+          </div>
+          <div class="pl-5">
+            <ng-container *ngIf="project.active">
+              <p class="text-success">Active</p>
+            </ng-container>
+            <ng-container *ngIf="!project.active">
+              <p class="text-danger">Not Active</p>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row">
+          <div class=" flex-fill">
+            <p class="text-white opacity-75">{{project.description}}</p>
+          </div>
+          <div class="button-container pb-3">
+            <button class="btn btn-primary edit-button onHover" (click)="openDialog(project)">Edit</button>
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </ng-container>
+  </div>
+
+
+
+</div>
+

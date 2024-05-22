@@ -1,0 +1,23 @@
+
+<ng-container *ngIf="isScreenSmall && isMenuOpen">
+  <div class=" nav-background pt-5 custom-animation" [class.slide-in]="isMenuOpen" [class.slide-up]="!isMenuOpen">
+    <div class="d-flex flex-column center container heading-color mulish">
+      <div class="border-bottom-mobile" routerLink="" (click)="onClick()">
+        <h1>Home</h1>
+      </div>
+      <div *ngIf="isAdmin$ | async" routerLink="/company" class="border-bottom-mobile" (click)="onClick()">
+        <h1>Company</h1>
+      </div>
+      <div routerLink="/teams" class="border-bottom-mobile" (click)="onClick()">
+        <h1>Teams</h1>
+      </div>
+      <div *ngIf="isAdmin$ | async" routerLink="/user-registry" class="border-bottom-mobile" (click)="onClick()">
+        <h1>Users</h1>
+      </div>
+      <div (click)="doLogout()" routerLink="/login" class="p-2">
+        <h1>Logout</h1>
+      </div>
+    </div>
+  </div>
+</ng-container>
+

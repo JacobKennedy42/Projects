@@ -1,0 +1,14 @@
+
+
+<div class="fullscreen-div center">
+   <h1 class="heading-color pb-3">Select Company</h1>
+   <app-drop-down
+     [companies]="companies"
+     [forCompanies]="true"
+     (companySelected)= "receiveCompany($event)"
+   ></app-drop-down>
+</div>
+
+
+
+

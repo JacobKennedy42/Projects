@@ -1,0 +1,52 @@
+.false-text {
+    color: red;
+}
+
+.true-text {
+    color: green;
+}
+
+th {
+  font-size: 20px;
+  text-align: center;
+  padding: 5px;
+}
+
+td {
+  text-align: center;
+  padding: 5px;
+}
+
+.button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+
+.border-colored {
+    color: #DEB992;
+}
+
+.thead-border-color {
+  border-color: #DEB992; /* Change this to your desired color */
+}
+
+table {
+  border-color: #DEB992; /* Change this to your desired color */
+}
+
+.material-table-color {
+  background-color: var(--primary-background); /* Change this to your desired color */
+  border: 1px solid #DEB992;
+}
+
+.table-container {
+  width: 100%;
+  border: 1px solid #DEB992; /* Change this to your desired border color */
+  border-radius: 10px; /* Adjust this to your desired border radius */
+  overflow: hidden; /* This makes sure the border radius is applied */
+}
+
+

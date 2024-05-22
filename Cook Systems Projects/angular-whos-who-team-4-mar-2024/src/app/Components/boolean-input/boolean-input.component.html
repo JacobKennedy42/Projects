@@ -1,0 +1,9 @@
+<div><input
+    type="checkbox"
+    #explicitCheckbox
+    name="explicitCheckbox"
+    [checked] = "startingValue"
+    (change)="setValue(explicitCheckbox.checked)"
+/>
+    <label for="explicitCheckbox">Explicit?</label>
+</div>

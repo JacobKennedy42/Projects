@@ -1,0 +1,6 @@
+<div *ngIf="authLoading || configLoading">Loading...</div>
+<div class="main" *ngIf="!authLoading && !configLoading">
+  <h1 class="title">Who's More Popular?</h1>
+  <a class="menu-button" routerLink="/game">Start game</a>
+  <a class="menu-button" routerLink="/config">Settings</a>
+</div>

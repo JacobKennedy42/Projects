@@ -1,0 +1,9 @@
+.body {
+  height: 100%;
+  padding-top: 60px;
+  background-color: var(--primary-background);
+}
+
+html {
+  background-color: var(--primary-background);
+}

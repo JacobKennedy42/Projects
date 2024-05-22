@@ -1,0 +1,43 @@
+.project-number-text {
+  opacity: 75%;
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 15px;
+}
+
+.team-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--secondary-background);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.25s;
+  width: 331px;
+  height: 241px;
+}
+
+.name-project-text {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.button-cell {
+  background-color: var(--heading-color);
+  color: white;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  outline: none;
+}
+
+

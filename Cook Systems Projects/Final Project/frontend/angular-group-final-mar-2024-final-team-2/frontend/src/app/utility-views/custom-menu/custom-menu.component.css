@@ -1,0 +1,43 @@
+.border-bottom-mobile {
+  border-bottom: 1px solid var(--heading-color);
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.custom-animation {
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+.slide-in {
+  animation:  .5s ease-in-out 0s 1  slideInFromTop;
+}
+
+
+.slide-up {
+  animation: slideUp 0.5s forwards;
+}
+

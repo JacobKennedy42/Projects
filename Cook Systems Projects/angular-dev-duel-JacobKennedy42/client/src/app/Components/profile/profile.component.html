@@ -1,0 +1,20 @@
+<div class="profile-container">
+    <div class="profile-column">
+        <img src={{profileData.avatar_url}} width="200">
+        <p>{{profileData.bio}}</p>
+    </div>
+
+    <div class="profile-column" style="align-items: flex-start;">
+        <app-labeled-field key="Username" value="{{profileData.username}}"></app-labeled-field>
+        <app-labeled-field key="Name" value="{{profileData.name}}"></app-labeled-field>
+        <app-labeled-field key="Location" value="{{profileData.location}}"></app-labeled-field>
+        <app-labeled-field key="Titles" value="{{profileData.titles}}"></app-labeled-field>
+        <app-labeled-field key="Favorite Language" value="{{profileData['favorite-language']}}"></app-labeled-field>
+        <app-labeled-field key="Total Stars" value="{{profileData['total-stars']}}"></app-labeled-field>
+        <app-labeled-field key="Highest Starred" value="{{profileData['highest-starred']}}"></app-labeled-field>
+        <app-labeled-field key="Public Repos" value="{{profileData['public-repos']}}"></app-labeled-field>
+        <app-labeled-field key="Perfect Repos" value="{{profileData['perfect-repos']}}"></app-labeled-field>
+        <app-labeled-field key="Followers" value="{{profileData.followers}}"></app-labeled-field>
+        <app-labeled-field key="Following" value="{{profileData.following}}"></app-labeled-field>
+    </div>
+</div>

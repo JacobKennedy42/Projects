@@ -1,0 +1,22 @@
+<div style="height: 100%;">
+    <app-link-button linkText="" text="← Back to home"></app-link-button>
+    <div class="game-container" *ngIf="songOptions.length >= 2">
+        <!-- <app-song-card [previewURL]="songOptions[0].preview_url"></app-song-card>
+            <app-song-card [previewURL]="songOptions[1].preview_url"></app-song-card> -->
+            <div class="song-container">
+                <app-song-card *ngFor="let song of songOptions" [previewURL]="song.preview_url" [detailsOn]="correct !== undefined" [song]="song"></app-song-card>
+            </div>
+            <div class="song-choice-container" *ngIf="correct === undefined">
+                <button class="button" (click)="songClickOne()">Song One</button>
+                <button class="button" (click)="songClickTwo()">Song Two</button>
+            </div>
+            <div *ngIf="correct !== undefined">
+                <button class="button" (click)="next()">Next</button>
+            </div>
+            <div class="correct-notification">
+                <p *ngIf="correct === true">Correct</p>
+                <p *ngIf="correct === false">Incorrect</p>
+            </div>
+            <p>Question {{questionsSoFar}} of {{totalQuestions}}</p>
+    </div>
+</div>

@@ -1,0 +1,138 @@
+@import url(https://unpkg.com/bootstrap@4.6.0/dist/css/bootstrap.min.css);/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+@import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
+
+:root {
+  --primary-background: #051622;
+  --heading-color: #1BA098;
+  --border-color: #DEB992;
+  --white-color: #FFFFFF;
+  --secondary-background: #0B2D45;
+  --nav-background: #0D3A59;
+}
+
+.mulish {
+           font-family: "Mulish", sans-serif;
+           font-optical-sizing: auto;
+           font-weight: 400;
+           font-style: normal;
+         }
+
+.primary-background {
+  background-color: var(--primary-background);
+}
+
+.secondary-background {
+  background-color: var(--secondary-background);
+}
+
+.heading-color {
+  color: var(--heading-color);
+}
+
+.border-color {
+  border-color: var(--border-color);
+}
+
+.nav-background {
+  background-color: var(--nav-background);
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--primary-background);
+  height: 100%;
+}
+
+.onHover:hover {
+  opacity: 50%;
+  cursor: pointer;
+}
+
+.onHover {
+  transition: 0.25s;
+}
+
+.raiseUpOnHover:hover {
+  transform: translateY(-5px);
+  cursor: pointer;
+}
+
+.raiseUpOnHover {
+  transition: 0.25s;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.visualizer {
+  border: 1px solid white;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+html {
+  background-color: var(--primary-background);
+}
+
+.border-bottom {
+  border-bottom: 2px solid #DEB992;
+}
+
+.white-color {
+  color: var(--white-color);
+}
+
+.project-input{
+  background-color: var(--primary-background);
+  color: var(--heading-color);
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  padding: 5px;
+  outline: none;
+}
+
+.project-button {
+  background-color: var(--heading-color);
+  color: white;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 35px;
+  outline: none;
+  margin-top: auto;
+
+}
+
+.styled-button {
+  background-color: var(--heading-color);
+  color: white;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 35px;
+  outline: none;
+}
+
+
+.opacity-75 {
+  opacity: 75%;
+}
+
+#full-width-menu .mat-menu-panel {
+  width: 100% !important;
+  max-width: none !important;
+  border: #F24E1E 2px solid !important;
+}
+
+
+
+

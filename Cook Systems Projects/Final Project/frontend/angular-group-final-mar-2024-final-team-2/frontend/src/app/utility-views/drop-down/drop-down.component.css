@@ -1,0 +1,13 @@
+.drop-down {
+  border-radius: 10px;
+  color: #5533FF;
+  padding: 5px 10px;
+  font-weight: bold;
+}
+
+.option {
+  padding: 100px 100px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+}

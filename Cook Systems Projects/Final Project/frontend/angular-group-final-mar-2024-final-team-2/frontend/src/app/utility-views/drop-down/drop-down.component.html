@@ -1,0 +1,35 @@
+ <ng-container *ngIf="forCompanies">
+    <div>
+      <select #dropdown name="companies" id="companies" (change)="submitCompany(JSON.parse(dropdown.value))" class="drop-down">
+        <option value="" disabled selected hidden>Pick an option</option>
+        <option class="option" *ngFor="let company of companies" [value]="company | json">{{company.name}}</option>
+      </select>
+    </div>
+  </ng-container>
+
+ <ng-container *ngIf="forEmployees">
+    <div>
+      <select #dropdown name="employees" id="employees" (change)="submitUser(JSON.parse(dropdown.value))" class="drop-down">
+        <option value="" disabled selected hidden>Pick an option</option>
+        <option class="option" *ngFor="let employee of employees" [value]="employee | json">{{employee.profile.firstName}} {{employee.profile.lastName | lastNameConverter}}.</option>
+      </select>
+    </div>
+ </ng-container>
+
+ <ng-container *ngIf="forActiveStatus">
+   <div>
+     <select #dropdown name="employees" id="status" (change)="submitForActiveStatus(dropdown.value)" class="drop-down">
+       <option value="" disabled selected hidden>Pick an option</option>
+       <option class="option" *ngFor="let status of statuses" [value]="status">{{status}}</option>
+     </select>
+   </div>
+ </ng-container>
+
+ <ng-container *ngIf="forAdminStatus">
+  <div>
+    <select #dropdown name="employees" id="adminStatus" (change)="submitForAdminStatus(dropdown.value)" class="drop-down">
+      <option value="" disabled selected hidden>Pick an option</option>
+      <option class="option" *ngFor="let status of statuses" [value]="status">{{status}}</option>
+    </select>
+  </div>
+</ng-container>

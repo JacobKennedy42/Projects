@@ -1,0 +1,22 @@
+<div>
+    <app-link-button linkText="" text="Home"></app-link-button>
+    <div  style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20vh;
+    ">
+        <div style="
+            margin: 2vh 2vw;
+        ">
+            You scored <b>{{score}} / {{totalQuestions}}</b> points!
+        </div>
+        <div *ngIf="!submitted" style="
+            margin: 2vh 2vw;
+        ">
+            <app-text-input (nameChange)="receiveName($event)"></app-text-input>
+            <button (click)="onSubmit()">Submit score</button>
+        </div>
+        <app-leaderboard></app-leaderboard>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div
+  style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20vh;
+  "
+>
+  <app-text-input (usernameChange)="receiveUsername($event)"></app-text-input>
+  <br />
+  <br />
+  <button class="submit-button" (click)="onSubmit()">Inspect</button>
+  <div *ngIf="profileSet()" style="
+      margin-top: 2vh;
+    "
+  >
+    <app-profile [profileData]="profile"></app-profile>
+  </div>
+</div>

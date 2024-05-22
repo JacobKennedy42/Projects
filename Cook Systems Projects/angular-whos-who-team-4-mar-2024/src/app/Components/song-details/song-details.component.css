@@ -1,0 +1,15 @@
+.details-container {
+    display: flex;
+    /* border: 1px solid black; */
+}
+
+.details {
+    width: ;
+    text-align: center;
+    margin: auto;
+    text-wrap: wrap;
+}
+
+.song-property {
+    font-weight: 700;
+}

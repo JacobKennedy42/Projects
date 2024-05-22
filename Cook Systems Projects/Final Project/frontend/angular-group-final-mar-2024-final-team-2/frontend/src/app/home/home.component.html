@@ -1,0 +1,21 @@
+<div class=" center flex-column">
+  <div class="center flex-column container announcement-border">
+    <div class="pt-5 pb-1">
+      <h1 class="heading-color">Announcements</h1>
+    </div>
+    <ng-container *ngIf="isAdmin$ | async">
+      <div class="button-container pb-3 mr-5">
+        <button class="btn btn-primary new-button onHover" (click)="openDialog()">New</button>
+      </div>
+    </ng-container>
+  </div>
+  <ng-container *ngFor="let announcement of announcements">
+    <app-announcement-card
+      [username]="announcement.authorFirstName"
+      [title]="'CEO'"
+      [postedAt]="formatDate(announcement.date)"
+      [message]="announcement.message">
+    </app-announcement-card>
+  </ng-container>
+
+</div>

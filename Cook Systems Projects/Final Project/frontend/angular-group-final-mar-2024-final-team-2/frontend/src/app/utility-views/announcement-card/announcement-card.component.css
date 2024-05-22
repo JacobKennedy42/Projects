@@ -1,0 +1,17 @@
+.announcement-container {
+  width: 788px;
+  background-color: var(--secondary-background);
+  border-radius: 10px;
+}
+
+.message-container {
+  padding: 25px 0 25px 25px;
+}
+
+@media (max-width: 580px) {
+  .announcement-container {
+    width: 450px;
+    background-color: var(--secondary-background);
+    border-radius: 10px;
+  }
+}

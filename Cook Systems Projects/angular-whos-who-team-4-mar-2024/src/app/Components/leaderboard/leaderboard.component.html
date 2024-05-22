@@ -1,0 +1,12 @@
+<div style="margin: 2vh 2vw;">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Score</th>
+        </tr>
+        <tr *ngFor="let item of leaderboard">
+            <td>{{item.name}}</td>
+            <td>{{item.score}}</td>
+        </tr>
+    </table>
+</div>

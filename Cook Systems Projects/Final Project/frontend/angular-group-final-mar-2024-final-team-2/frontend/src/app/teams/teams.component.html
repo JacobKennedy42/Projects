@@ -1,0 +1,25 @@
+<div class="d-flex flex-column center">
+  <div>
+    <h1 class="mulish heading-color p-5">Teams</h1>
+  </div>
+  <div class="grid" >
+    <app-team-card *ngFor="let team of teams"
+    [id] = "team.id"
+    [name] = "team.name"
+    [description] = "team.description"
+    [teammates] = "team.teammates"
+    [numProjects] = "team.numberOfProjects"
+                   (click)="showProjects(team)"
+    >
+
+    </app-team-card>
+
+    <ng-container *ngIf="(isAdmin$ | async)">
+      <app-new-team-item
+      (newTeam)="addTeam($event)"
+      >
+
+      </app-new-team-item>
+    </ng-container>
+  </div>
+</div>
