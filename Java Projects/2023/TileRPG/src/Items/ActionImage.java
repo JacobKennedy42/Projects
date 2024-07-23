@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import Game.Tile;
+import Board.Tile;
 import UI.ColoredEllipse;
 import UI.ColoredPolygon;
 import UI.ColoredRectangle;

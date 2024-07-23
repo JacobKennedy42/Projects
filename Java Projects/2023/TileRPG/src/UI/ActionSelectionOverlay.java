@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import Game.Board.ActionCallback;
-import Game.Tile;
+import Board.Tile;
+import Board.BoardManager.ActionCallback;
 import Items.Action;
 
 public class ActionSelectionOverlay implements CanvasObject {

@@ -3,7 +3,7 @@ package TargetingAIs;
 import java.util.Collection;
 import java.util.List;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Action;
 
 public interface AI {

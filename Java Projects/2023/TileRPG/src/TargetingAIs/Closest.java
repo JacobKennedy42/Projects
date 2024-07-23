@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import Game.Tile;
-import Game.Tile.TileCondition;
+import Board.Tile;
+import Board.Tile.TileCondition;
 import Items.Action;
 import TileRegions.EmanationRegion;
 import TileRegions.TileRegion;
@@ -20,10 +20,7 @@ public class Closest implements AI {
 		_propogationCondition = propogationCondition;
 	}
 	
-//	public List<Tile> getMovementPath (Tile origin, int movementPerTurn, Action action) {
-//		Collection<Tile> soughtTiles = getSoughtTiles(origin.getAllPlayers(), action);
 	public List<Tile> getMovementPath (Tile origin, int movementPerTurn, Collection<Tile> soughtTiles) {
-//		Collection<Tile> soughtTiles = getSoughtTiles(origin.getAllPlayers(), action);
 		EmanationRegion movementRegion = new EmanationRegion(origin, movementPerTurn,
 				Tile.HAS_SPACE_FOR(origin.getMob()).or(Tile.HAS_PLAYER_MOB),
 				_propogationCondition,
@@ -32,13 +29,6 @@ public class Closest implements AI {
 		
 		return movementRegion.getMovementPath(destination);
 	}
-	
-//	private Collection<Tile> getSoughtTiles (Collection<Tile> playerTiles, Action action) {
-//		HashSet<Tile> soughtTiles =  new HashSet<Tile>();
-//		for (Tile target : playerTiles)
-//			soughtTiles.addAll(action.getAreaOfInfluence(target));	//Assumes that if player can hit enemy, enemy can hit player
-//		return soughtTiles;
-//	}
 	
 	public Tile getTargetFrom (Tile origin, Action action) {
 		if (origin == null)

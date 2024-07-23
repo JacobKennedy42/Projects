@@ -3,24 +3,63 @@ package Mobs;
 import java.awt.Graphics2D;
 import java.util.Objects;
 
-import Game.Tile;
+import Board.Tile;
 import UI.ColoredShape;
 
-public class Mob{
+public class Mob {
 	private String _name;
 	private ColoredShape _shape;
 	private Tile _tile;
 	private int _health, _maxHealth;
+
+	protected int _eotHealth, _eotMaxHealth;
+
+	private Mob _isPreviewOf;
 	
 	Mob (ColoredShape shape, int maxHealth) {
-		_shape = shape; _health = maxHealth; _maxHealth = maxHealth;
+		setState(shape, maxHealth);
 	}
 	Mob (Mob other) {
-		_name = other._name; _shape = other._shape; _health = other._health; _maxHealth = other._maxHealth;
+		setState(other);
 	}
 	
 	public Mob getState() {
 		return new Mob(this);
+	}
+
+	private void setState (ColoredShape shape, int maxHealth, int health) {
+		_shape = shape;
+		_health = health;
+		_maxHealth = maxHealth;
+		_eotHealth = health;
+		_eotMaxHealth = maxHealth;
+		_isPreviewOf = null;
+	}
+	private void setState (ColoredShape shape, int maxHealth) {
+		setState(shape, maxHealth, maxHealth);
+	}
+	private void setState (Mob other) {
+		setState(other._shape, other._maxHealth, other._health);
+		_name = other._name;
+		_isPreviewOf = other._isPreviewOf;
+	}
+
+	public Mob makePreviewCopy() {
+		Mob copy = getState();
+		// TODO: children give null as getState. How do we deal with this? probable override makePreviewCopy in compoundMob to give null if child and make previews for children if parent, then place parent on board like normal
+		// System.out.println(copy);
+		copy._isPreviewOf = this;
+		return copy;
+	}
+
+	public void applyPreview () {
+		if (_isPreviewOf == null)
+			throw new RuntimeException("Trying to update original Mob when this Mob is not a preview");
+		_isPreviewOf.updatePreviewDisplay(this);
+	}
+	protected void updatePreviewDisplay (Mob preview) {
+		_eotHealth = preview._health;
+		_eotMaxHealth = preview._maxHealth;
 	}
 	
 	public void setName (String name) {

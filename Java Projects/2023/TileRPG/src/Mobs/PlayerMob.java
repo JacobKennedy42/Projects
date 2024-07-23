@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Objects;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Item;
 import TileRegions.EmanationRegion;
 import TileRegions.TileRegion;

@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Objects;
 
-import Game.Tile;
-import Game.Tile.TileCondition;
+import Board.Tile;
+import Board.Tile.TileCondition;
 import Items.ActionImage.ActionImageShape;
 import Mobs.MobFactory;
 import Mobs.MobLabel;
@@ -710,9 +710,11 @@ public class Action {
 		if (origin == null || target == null)
 			return false;
 		
-		origin.getCreatureMob().decrementActionsLeft(1);
 		ActionState state = executeKeywords(origin, target, directionTile);
-		return state.applyEffects();
+		boolean actionSuccessful = state.applyEffects();
+		if (actionSuccessful)
+			origin.getCreatureMob().decrementActionsLeft(1);
+		return actionSuccessful;
 	}
 	
 	public void applyPreview (Tile origin, Tile target) {

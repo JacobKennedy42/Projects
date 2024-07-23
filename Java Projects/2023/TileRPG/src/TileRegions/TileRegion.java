@@ -2,7 +2,7 @@ package TileRegions;
 
 import java.awt.Color;
 
-import Game.Tile;
+import Board.Tile;
 
 public interface TileRegion extends Iterable<Tile> {
 	public int getDistanceFromOrigin(Tile targetTile);

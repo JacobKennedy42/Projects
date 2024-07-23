@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import Game.Tile;
-import Game.Tile.TileCondition;
+import Board.Tile;
+import Board.Tile.TileCondition;
 
 public class EmanationRegion implements TileRegion {
 	
@@ -116,10 +116,10 @@ public class EmanationRegion implements TileRegion {
 		_layers = selectTiles(origin, layerThickness, soughtCondition);
 	}
 	
-	public EmanationRegion (Tile origin, int layerThickness, TileCondition selectionCondition, TileCondition propagationCondition, TileCondition soughtCondition, TileCondition removalCondition) {
-		this (origin, layerThickness, selectionCondition, propagationCondition, soughtCondition);
-		removeTilesWith(removalCondition);
-	}
+	// public EmanationRegion (Tile origin, int layerThickness, TileCondition selectionCondition, TileCondition propagationCondition, TileCondition soughtCondition, TileCondition removalCondition) {
+	// 	this (origin, layerThickness, selectionCondition, propagationCondition, soughtCondition);
+	// 	removeTilesWith(removalCondition);
+	// }
 	
 	public EmanationRegion (Tile origin, int numLayers, int layerThickness, boolean includeOrigin, TileCondition selectionCondition, TileCondition propagationCondition) {
 		_selectionCondition = selectionCondition;

@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import Game.Tile;
-import Game.Tile.TileCondition;
+import Board.Tile;
+import Board.Tile.TileCondition;
 
 class Layer implements TileRegion {
 	private List<Tile> _tiles;

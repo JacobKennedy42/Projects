@@ -1,7 +1,6 @@
 package UI;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 public interface CanvasObject {
 	void draw (Graphics2D g);

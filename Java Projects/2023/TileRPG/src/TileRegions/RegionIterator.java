@@ -3,7 +3,7 @@ package TileRegions;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import Game.Tile;
+import Board.Tile;
 
 class RegionIterator implements Iterator<Tile> {
 	

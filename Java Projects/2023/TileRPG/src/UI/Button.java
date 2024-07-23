@@ -9,7 +9,7 @@ public class Button implements CanvasObject {
 	private ButtonAction _action;
 	private ColoredShape _background;
 	private String _text;
-	private static final int BUTTON_WIDTH = 100, BUTTON_HEIGHT = 50;
+	private static final int BUTTON_WIDTH = 140, BUTTON_HEIGHT = 50;
 	
 	@FunctionalInterface
 	public interface ButtonAction {

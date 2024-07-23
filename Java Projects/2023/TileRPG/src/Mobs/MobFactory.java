@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Item;
 import Items.ItemLabel;
 import Items.Item.ItemFactory;

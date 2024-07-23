@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Action;
 import Items.Item;
 import TargetingAIs.AI;

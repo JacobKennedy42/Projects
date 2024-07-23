@@ -1,6 +1,6 @@
 package Mobs;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Item;
 import TargetingAIs.AI;
 import UI.ColoredShape;

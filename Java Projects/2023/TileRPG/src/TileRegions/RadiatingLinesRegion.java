@@ -1,13 +1,11 @@
 package TileRegions;
 
 import java.awt.Color;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
-import Game.Tile;
-import Game.Tile.TileCondition;
+import Board.Tile;
+import Board.Tile.TileCondition;
 
 public class RadiatingLinesRegion implements TileRegion {
 	

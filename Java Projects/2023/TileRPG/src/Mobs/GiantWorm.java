@@ -3,7 +3,7 @@ package Mobs;
 import java.awt.Color;
 import java.util.List;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Item;
 import Items.ItemLabel;
 import Items.Item.ItemFactory;
@@ -113,6 +113,10 @@ class GiantWorm extends CompoundMob{
 		
 		@Override
 		public boolean canFitIn (Tile tile) {
+			//This is a bad hack. If getTile() is null, then worm has not been placed yet and should consider children. Otherwise, moves like it has no children, and the children follow
+			if (getTile() == null)
+				return super.canFitIn(tile);
+
 			return tile != null && !isFriendlyTo(tile.getMob());
 		}
 		

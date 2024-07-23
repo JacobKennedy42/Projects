@@ -3,7 +3,7 @@ package UI;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import Game.Tile;
+import Board.Tile;
 import Mobs.Mob;
 
 public class MobDisplay implements CanvasObject {

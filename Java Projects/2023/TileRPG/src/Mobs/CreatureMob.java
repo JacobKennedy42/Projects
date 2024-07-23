@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import Game.Tile;
+import Board.Tile;
 import Items.Action;
 import Items.Item;
 import TileRegions.EmanationRegion;
@@ -20,10 +20,11 @@ public abstract class CreatureMob extends Mob {
 	private int _movementLeft, _speed;
 	private int _mana, _maxMana;
 	private int _actionsLeft;
-	private int _incomingAttackDamage;
 
 	private int _shields;
 	private int _regen;
+
+	private int _eotShields;
 
 	protected CreatureMob(ColoredShape shape, Item weapon, int speed, int maxHealth) {
 		this(shape, weapon, speed, maxHealth, 0);
@@ -31,28 +32,30 @@ public abstract class CreatureMob extends Mob {
 
 	protected CreatureMob(ColoredShape shape, Item weapon, int speed, int maxHealth, int maxMana) {
 		super(shape, maxHealth);
-		_movementLeft = speed;
-		_speed = speed;
-		_mana = maxMana;
-		_maxMana = maxMana;
-		_actionsLeft = 1;
-		_incomingAttackDamage = 0;
-		_shields = 0;
-		_regen = 0;
-		setWeapon(weapon);
+		setState(speed, maxMana, weapon);
 	}
 
 	protected CreatureMob(CreatureMob other) {
 		super(other);
-		_movementLeft = other._movementLeft;
-		_speed = other._speed;
-		_mana = other._mana;
-		_maxMana = other._maxMana;
-		_actionsLeft = other._actionsLeft;
-		_incomingAttackDamage = other._incomingAttackDamage;
-		_shields = other._shields;
-		_regen = other._regen;
-		setWeapon(other.getWeapon());
+		setState(other);
+	}
+
+	private void setState (int speed, int movementLeft, int maxMana, int mana, int actionsLeft, int shields, int regen, Item weapon){
+		_movementLeft = movementLeft;
+		_speed = speed;
+		_mana = mana;
+		_maxMana = maxMana;
+		_actionsLeft = actionsLeft;
+		_shields = shields;
+		_eotShields = shields;
+		_regen = regen;
+		setWeapon(weapon);
+	}
+	private void setState (int speed, int maxMana, Item weapon) {
+		setState(speed, speed, maxMana, maxMana, 1, 0, 0, weapon);
+	}
+	private void setState (CreatureMob other) {
+		setState(other._speed, other._movementLeft, other._maxMana, other._mana, other._actionsLeft, other._shields, other._regen, other._weapon);
 	}
 
 	@Override
@@ -129,6 +132,16 @@ public abstract class CreatureMob extends Mob {
 	}
 
 	@Override
+	protected void updatePreviewDisplay (Mob preview) {
+		super.updatePreviewDisplay(preview);
+		if (!(preview instanceof CreatureMob))
+			throw new RuntimeException("preview is not a CreatureMob");
+		
+		CreatureMob previewCreature = (CreatureMob) preview;
+		_eotShields = previewCreature._shields;
+	}
+
+	@Override
 	public void damage(int delta) {
 		if (delta < 0)
 			throw new RuntimeException("Delta cannot be negative");
@@ -157,21 +170,6 @@ public abstract class CreatureMob extends Mob {
 		return _regen;
 	}
 
-	public void incrementIncomingAttackDamage(int delta) {
-		_incomingAttackDamage += delta;
-
-		if (_incomingAttackDamage < 0)
-			throw new RuntimeException("Next turn health loss should not be negative");
-	}
-
-	private int getIncomingAttackDamage() {
-		return _incomingAttackDamage;
-	}
-
-	private void resetIncomingAttackDamage() {
-		_incomingAttackDamage = 0;
-	}
-
 	public void incrementShields(int delta) {
 		_shields += delta;
 	}
@@ -195,7 +193,6 @@ public abstract class CreatureMob extends Mob {
 	}
 
 	public void startTurn() {
-		resetIncomingAttackDamage();
 		resetShields();
 		setMovementLeft(getSpeed());
 		resetActionsLeft();
@@ -228,6 +225,7 @@ public abstract class CreatureMob extends Mob {
 		drawHealthOutline(g, centerX, centerY);
 		drawLostHealthOutline(g, centerX, centerY);
 		drawShieldOutline(g, centerX, centerY);
+		drawLostShieldOutline(g, centerX, centerY);
 		super.draw(g, centerX, centerY);
 	}
 
@@ -237,17 +235,8 @@ public abstract class CreatureMob extends Mob {
 		outline.draw(g, centerX, centerY);
 	}
 
-	private int getNetHealth() {
-		int netHealth = getHealth() + getRegen();
-		netHealth = netHealth < 0 ? 0 : netHealth > getMaxHealth() ? getMaxHealth() : netHealth;
-		netHealth = (netHealth + getShields()) - getIncomingAttackDamage();
-		netHealth = netHealth < 0 ? 0 : netHealth > getMaxHealth() ? getMaxHealth() : netHealth;
-		return netHealth;
-	}
-
 	private void drawLostHealthOutline(Graphics2D g, int centerX, int centerY) {
-		int netHealth = getNetHealth();
-		int offsetTwelfths = netHealth * 12 / getMaxHealth();
+		int offsetTwelfths = _eotHealth * 12 / getMaxHealth();
 		int healthTwelfths = getHealth() * 12 / getMaxHealth();
 		int spanTwelfths = healthTwelfths - offsetTwelfths;
 		ColoredPie outline = makePie(offsetTwelfths, spanTwelfths, lostHealthOutlineColor());
@@ -255,12 +244,25 @@ public abstract class CreatureMob extends Mob {
 	}
 
 	private void drawShieldOutline(Graphics2D g, int centerX, int centerY) {
-		int netShields = getShields() - getIncomingAttackDamage();
-		netShields = netShields >= 0 ? netShields : 0;
+		if (_eotHealth < getHealth())	//don't draw shields if any damage will get through them, since we want to show health lost
+			return;
 
-		int twelfths = netShields * 12 / getMaxHealth();
+		int twelfths = getShields() * 12 / getMaxHealth();
 		twelfths = twelfths <= 12 ? twelfths : 12;
 		ColoredPie outline = makePie(twelfths, shieldOutlineColor());
+		outline.draw(g, centerX, centerY);
+	}
+
+	private void drawLostShieldOutline (Graphics2D g, int centerX, int centerY) {
+		if (_eotHealth < getHealth())	//don't draw shields if any damage will get through them, since we want to show health lost
+			return;
+
+		int offsetTwelfths = _eotShields * 12 / getMaxHealth();
+		offsetTwelfths = offsetTwelfths <= 12 ? offsetTwelfths : 12;
+		int shieldTwelfths = getShields() * 12 / getMaxHealth();
+		shieldTwelfths = shieldTwelfths <= 12 ? shieldTwelfths : 12;
+		int spanTwelfths = shieldTwelfths - offsetTwelfths;
+		ColoredPie outline = makePie(offsetTwelfths, spanTwelfths, lostHealthOutlineColor());
 		outline.draw(g, centerX, centerY);
 	}
 
@@ -294,7 +296,8 @@ public abstract class CreatureMob extends Mob {
 		String shieldString = getShields() > 0 ? "  Shields: " + getShields() : "";
 		String endOfTurnHealthDeltaString = getRegen() > 0 ? "\nRegen: " + getRegen()
 				: getRegen() < 0 ? "\nPoison: " + (getRegen() * -1) : "";
-		String healthLossString = _incomingAttackDamage > 0 ? "\nIncoming Attack Damage: " + _incomingAttackDamage : "";
+		int dHealth = getHealth() - _eotHealth;
+		String healthLossString = dHealth > 0 ? "\nIncoming Attack Damage: " + dHealth : "";
 		String manaString = getMaxMana() > 0 ? "\nMana Left: " + getMana() + "/" + _maxMana : "";
 		String weaponString = getWeapon() != null ? "\n\n" + getWeapon().toString() : "";
 
@@ -311,7 +314,6 @@ public abstract class CreatureMob extends Mob {
 				&& getMana() == other.getMana()
 				&& getMaxMana() == other.getMaxMana()
 				&& getActionsLeft() == other.getActionsLeft()
-				&& getIncomingAttackDamage() == other.getIncomingAttackDamage()
 				&& getShields() == other.getShields()
 				&& getRegen() == other.getRegen();
 	}

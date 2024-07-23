@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import Game.Tile;
-import Game.Tile.TileCondition;
+import Board.Tile;
+import Board.Tile.TileCondition;
 
 public class LineRegion implements TileRegion {
 
